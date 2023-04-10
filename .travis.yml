@@ -1,0 +1,11 @@
+os: windows
+
+language: go
+
+go: 1.17.x
+
+before_install:
+  - go vet ./...
+
+script:
+  - go test -v -coverprofile=coverage.txt -covermode=atomic
