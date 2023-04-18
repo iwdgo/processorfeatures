@@ -22,19 +22,28 @@ var ProcessorFeatures = []ProcessorFeature{
 	{26, "7", "PF_ARM_EXTERNAL_CACHE_AVAILABLE", "The external cache is available."},
 	{27, "7", "PF_ARM_FMAC_INSTRUCTIONS_AVAILABLE", "The floating-point multiply-accumulate instruction is available."},
 	{18, "7", "PF_ARM_VFP_32_REGISTERS_AVAILABLE", "The VFP/Neon: 32 x 64bit register bank is present. This flag has the same meaning as PF_ARM_VFP_EXTENDED_REGISTERS."},
+	// AMD https://en.wikipedia.org/wiki/3DNow! Deprecated
 	{7, "", "PF_3DNOW_INSTRUCTIONS_AVAILABLE", "The 3D-Now instruction set is available."},
 	{16, "", "PF_CHANNELS_ENABLED", "The processor channels are enabled."},
 	{2, "v1", "PF_COMPARE_EXCHANGE_DOUBLE", "The atomic compare and exchange operation (cmpxchg) is available."},
 	{14, "v2", "PF_COMPARE_EXCHANGE128", "The atomic compare and exchange 128-bit operation (cmpxchg16b) is available."},
+	// Itanium
 	{15, "", "PF_COMPARE64_EXCHANGE128", "The atomic compare 64 and exchange 128-bit operation (cmp8xchg16) is available."},
+	// AMD & ARM https://learn.microsoft.com/en-us/cpp/intrinsics/fastfail?view=msvc-170
 	{23, "", "PF_FASTFAIL_AVAILABLE", "_fastfail() is available."},
+	// Floating point is emulated
 	{1, "", "PF_FLOATING_POINT_EMULATED", "Floating-point operations are emulated using a software emulator.\nThis function returns a nonzero value if floating-point operations are emulated; otherwise, it returns zero."},
+	// https://en.wikipedia.org/wiki/Pentium_FDIV_bug
 	{0, "", "PF_FLOATING_POINT_PRECISION_ERRATA", "On a Pentium, a floating-point precision error can occur in rare circumstances."},
 	{3, "v1", "PF_MMX_INSTRUCTIONS_AVAILABLE", "The MMX instruction set is available."},
+	// https://learn.microsoft.com/en-us/windows/win32/win7appqual/dep-nx-protection
 	{12, "", "PF_NX_ENABLED", "Data execution prevention is enabled."},
+	// Windows 32-bit: https://learn.microsoft.com/en-us/windows/win32/memory/physical-address-extension
 	{9, "", "PF_PAE_ENABLED", "The processor is PAE-enabled."},
-	{8, "", "PF_RDTSC_INSTRUCTION_AVAILABLE", "The RDTSC instruction is available."},
-	{22, "", "PF_RDWRFSGSBASE_AVAILABLE", "RDFSBASE, RDGSBASE, WRFSBASE, and WRGSBASE instructions are available."},
+	// https://en.wikipedia.org/wiki/Time_Stamp_Counter
+	{8, "CR4", "PF_RDTSC_INSTRUCTION_AVAILABLE", "The RDTSC instruction is available."},
+	// CR4 https://en.wikipedia.org/wiki/Control_register
+	{22, "CR4", "PF_RDWRFSGSBASE_AVAILABLE", "RDFSBASE, RDGSBASE, WRFSBASE, and WRGSBASE instructions are available."},
 	{20, "", "PF_SECOND_LEVEL_ADDRESS_TRANSLATION", "Second Level Address Translation is supported by the hardware."},
 	{13, "v2", "PF_SSE3_INSTRUCTIONS_AVAILABLE", "The SSE3 instruction set is available."},
 	{36, "v2", "PF_SSSE3_INSTRUCTIONS_AVAILABLE", "The SSSE3 instruction set is available."},
@@ -43,6 +52,7 @@ var ProcessorFeatures = []ProcessorFeature{
 	{39, "v3", "PF_AVX_INSTRUCTIONS_AVAILABLE", "The AVX instruction set is available."},
 	{40, "v3", "PF_AVX2_INSTRUCTIONS_AVAILABLE", "The AVX2 instruction set is available."},
 	{41, "v4", "PF_AVX512F_INSTRUCTIONS_AVAILABLE", "The AVX512F instruction set is available."},
+	// https://support.microsoft.com/en-us/windows/enable-virtualization-on-windows-11-pcs-c5578302-6e43-4b4b-a449-8ced115f58e1
 	{21, "", "PF_VIRT_FIRMWARE_ENABLED", "Virtualization is enabled in the firmware and made available by the operating system."},
 	{6, "v1", "PF_XMMI_INSTRUCTIONS_AVAILABLE", "The SSE instruction set is available."},
 	{10, "v1", "PF_XMMI64_INSTRUCTIONS_AVAILABLE", "The SSE2 instruction set is available."},
