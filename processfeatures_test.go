@@ -14,7 +14,7 @@ func TestIsProcessorFeaturesPresent_all(t *testing.T) {
 			t.Fatal(err)
 		}
 		if b {
-			t.Logf("%s", f.doc)
+			t.Logf("%s: %s", f.s, f.doc)
 			c++
 		}
 	}
@@ -22,7 +22,7 @@ func TestIsProcessorFeaturesPresent_all(t *testing.T) {
 }
 
 func TestSetGOAMD64v(t *testing.T) {
-	if runtime.GOARCH != "AMD64" {
+	if runtime.GOARCH != "amd64" {
 		t.Skip("Not an AMD64 processor. Skipping.")
 	}
 	v, err := SetGOAMD64v()
@@ -42,7 +42,7 @@ func TestSetGOARMv(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if runtime.GOARCH != "ARM64" {
+	if runtime.GOARCH != "arm64" {
 		if s := os.Getenv("GOARCH"); s != v {
 			t.Errorf("got %s, want %s", s, v)
 		}
@@ -63,14 +63,10 @@ func TestIsVersionComplete(t *testing.T) {
 	// TODO Should display all complete or missing items
 	v := os.Getenv("GOAMD64")
 	t.Logf("%s", v)
-	// v1 features:
-	// CX8, MMX, SSE, SSE2 - not checked: CMOV, FPU, FXSR, OSFXSR, SCE
-	// v2 features:
-	// CMPXCHG16B, SSE3, SSE4_1, SSE4_2, SSSE3 - not checked: LAHF-SAHF, POPCNT,
-	// v3 features:
-	// AVX, AVX2 - not checked: BMI1, BMI2, F16C, FMA, LZCNT, MOVBE, OSXSAVE
-	// v4 features:
-	// AVX512F - not checked: AVX512BW, AVX512CD, AVX512DQ, AVX512VL
+	// windows v1: CX8, MMX, SSE, SSE2 - not checked: CMOV, FPU, FXSR, OSFXSR, SCE
+	// windows v2: CMPXCHG16B, SSE3, SSE4_1, SSE4_2, SSSE3 - not checked: LAHF-SAHF, POPCNT,
+	// windows v3: AVX, AVX2 - not checked: BMI1, BMI2, F16C, FMA, LZCNT, MOVBE, OSXSAVE
+	// windows v4: AVX512F - not checked: AVX512BW, AVX512CD, AVX512DQ, AVX512VL
 	for _, check := range []string{"v1", "v2", "v3", "v4"} {
 		if m := IsVersionComplete(check); len(m) == 0 {
 			v = check
