@@ -3,7 +3,6 @@
 [![codecov](https://codecov.io/gh/iwdgo/processorfeatures/branch/master/graph/badge.svg)](https://codecov.io/gh/iwdgo/processorfeatures)
 
 [![Go](https://github.com/iwdgo/processorfeatures/actions/workflows/go.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/go.yml)
-[![Build Status](https://app.travis-ci.com/iwdgo/processorfeatures.svg?branch=master)](https://app.travis-ci.com/iwdgo/processorfeatures)
 
 # Processor characteristics 
 
