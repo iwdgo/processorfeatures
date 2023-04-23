@@ -10,6 +10,11 @@
 The variable has an effect only when cross-compiling or re-compiling go locally.
 Purpose of the module is to detect processor characteristics and set the relevant processor variable accordingly.
 
+## Linux
+
+File '/proc/cpuinfo' is parsed to locate all flags.
+Reported flags are used to determine version of processor.
+
 ## Windows
 
 Win32 API call `IsProcessorFeaturePresent` is used to collect the features of the processor.
@@ -40,4 +45,4 @@ https://stackoverflow.com/questions/19844575/how-to-do-division-in-arm
 
 ### Version history
 
-`v0.1.0` Published. Windows only.
+API is still a prototype
