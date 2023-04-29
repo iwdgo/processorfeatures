@@ -10,6 +10,11 @@ type ProcessorFeature struct {
 	doc string // Documentation
 }
 
+// IsProcessorFeaturesPresent returns true when the feature identified by the number is present.
+func IsProcessorFeaturesPresent(i uint32) (bool, error) {
+	return isProcessorFeaturesPresent(i)
+}
+
 // SetGOAMD64v sets GOAMD64 for the current go session. Default v1 is used when no higher version is complete.
 // Version set is returned or an error.
 func SetGOAMD64v() (v string, err error) {

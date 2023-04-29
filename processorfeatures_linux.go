@@ -146,8 +146,7 @@ func loadflags() error {
 	return nil
 }
 
-// IsProcessorFeaturesPresent returns true when the feature identified by the number is present.
-func IsProcessorFeaturesPresent(i uint32) (bool, error) {
+func isProcessorFeaturesPresent(i uint32) (bool, error) {
 	if !filled {
 		if err := loadflags(); err != nil {
 			return false, err
