@@ -1,5 +1,3 @@
-// Package processorfeatures provides details on the available processor features on Windows
-
 //go:build windows
 
 package processorfeatures
@@ -8,13 +6,6 @@ import (
 	"os"
 	"syscall"
 )
-
-type ProcessorFeature struct {
-	i   uint32 // Feature number
-	v   string // Version when defined by standard.
-	s   string // Flag name
-	doc string // Documentation
-}
 
 var ProcessorFeatures = []ProcessorFeature{
 	{25, "7", "PF_ARM_64BIT_LOADSTORE_ATOMIC", "The 64-bit load/store atomic instructions are available."},

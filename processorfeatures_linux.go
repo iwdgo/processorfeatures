@@ -1,5 +1,3 @@
-// Package processorfeatures provides details on the available processor features
-
 //go:build linux
 
 package processorfeatures
@@ -9,13 +7,6 @@ import (
 	"errors"
 	"os"
 )
-
-type ProcessorFeature struct {
-	i   uint32 // Feature number
-	v   string // Version when defined by standard.
-	s   string // Flag name
-	doc string // Documentation
-}
 
 var ProcessorFeatures = []ProcessorFeature{
 	{0, "xv1", "fxsr", ""},
