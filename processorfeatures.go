@@ -54,13 +54,13 @@ func SetGOARMv() (v string, err error) {
 		if err != nil {
 			return
 		}
-		err = os.Setenv("GOARCH", "ARM64")
+		err = os.Setenv("GOARCH", "arm64")
 		if err != nil {
 			return
 		}
 		return
 	}
-	err = os.Setenv("GOARCH", "ARM")
+	err = os.Setenv("GOARCH", "arm")
 	if err != nil {
 		return
 	}
@@ -72,7 +72,7 @@ func SetGOARMv() (v string, err error) {
 		}
 		return
 	}
-	// TODO Check that 6 is set for all
+	// TODO Check that 6 is set for all or return 5
 	v = "6" // Default
 	err = os.Setenv("GOARM", v)
 	if err != nil {
