@@ -35,7 +35,7 @@ func TestSetGOAMD64v(t *testing.T) {
 }
 
 func TestSetGOARMv(t *testing.T) {
-	if runtime.GOARCH != "ARM" && runtime.GOARCH != "ARM64" {
+	if runtime.GOARCH != "arm" && runtime.GOARCH != "arm64" {
 		t.Skip("Not an ARM processor. Skipping.")
 	}
 	v, err := SetGOARMv()
