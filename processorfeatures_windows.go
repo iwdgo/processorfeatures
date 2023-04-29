@@ -105,19 +105,3 @@ func SetGOARMv() (v string, err error) {
 	}
 	return
 }
-
-func IsVersionComplete(v string) (missing []uint32) {
-	for _, f := range ProcessorFeatures {
-		if f.v == v {
-			if b, err := IsProcessorFeaturesPresent(f.i); err == nil {
-				if !b {
-					missing = append(missing, f.i)
-				}
-			} else {
-				// TODO error is only about loading DLL
-				missing = append(missing, f.i)
-			}
-		}
-	}
-	return missing
-}
