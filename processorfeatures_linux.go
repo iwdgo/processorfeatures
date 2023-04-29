@@ -157,26 +157,6 @@ func IsProcessorFeaturesPresent(i uint32) (bool, error) {
 	return featuresstatus[i], nil
 }
 
-// SetGOAMD64v sets GOAMD64 for the current go session. Default v1 is used when no higher version is complete.
-// Version set is returned or an error.
-func SetGOAMD64v() (v string, err error) {
-	for _, v = range []string{"v4", "v3", "v2"} {
-		if m := IsVersionComplete(v); len(m) == 0 {
-			err = os.Setenv("GOAMD64", v)
-			if err != nil {
-				return
-			}
-			return
-		}
-	}
-	v = "v1"
-	err = os.Setenv("GOAMD64", v)
-	if err != nil {
-		return
-	}
-	return
-}
-
 // SetGOARMv sets GOARM and GOARM64 and returns ARM64, 7 or 6 depending on identified processor features.
 func SetGOARMv() (v string, err error) {
 	v = "ARM64"
