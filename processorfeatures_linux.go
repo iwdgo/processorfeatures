@@ -156,38 +156,3 @@ func IsProcessorFeaturesPresent(i uint32) (bool, error) {
 	}
 	return featuresstatus[i], nil
 }
-
-// SetGOARMv sets GOARM and GOARM64 and returns ARM64, 7 or 6 depending on identified processor features.
-func SetGOARMv() (v string, err error) {
-	v = "ARM64"
-	if m := IsVersionComplete(v); len(m) == 0 {
-		err = os.Unsetenv("GOARM")
-		if err != nil {
-			return
-		}
-		err = os.Setenv("GOARCH", "ARM64")
-		if err != nil {
-			return
-		}
-		return
-	}
-	err = os.Setenv("GOARCH", "ARM")
-	if err != nil {
-		return
-	}
-	v = "7"
-	if m := IsVersionComplete(v); len(m) == 0 {
-		err = os.Setenv("GOARM", v)
-		if err != nil {
-			return
-		}
-		return
-	}
-	// TODO Check that 6 is set for all
-	v = "6" // Default
-	err = os.Setenv("GOARM", v)
-	if err != nil {
-		return
-	}
-	return
-}

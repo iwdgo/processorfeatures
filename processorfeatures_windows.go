@@ -3,7 +3,6 @@
 package processorfeatures
 
 import (
-	"os"
 	"syscall"
 )
 
@@ -48,13 +47,13 @@ var ProcessorFeatures = []ProcessorFeature{
 	{6, "v1", "PF_XMMI_INSTRUCTIONS_AVAILABLE", "The SSE instruction set is available."},
 	{10, "v1", "PF_XMMI64_INSTRUCTIONS_AVAILABLE", "The SSE2 instruction set is available."},
 	{17, "v2", "PF_XSAVE_ENABLED", "The processor implements the XSAVE and XRSTOR instructions."},
-	{29, "ARM64", "PF_ARM_V8_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8 instructions set."},
-	{30, "ARM64", "PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8 extra cryptographic instructions (for example, AES, SHA1 and SHA2)."},
-	{31, "ARM64", "PF_ARM_V8_CRC32_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8 extra CRC32 instructions."},
-	{34, "ARM64", "PF_ARM_V81_ATOMIC_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8.1 atomic instructions (for example, CAS, SWP)."},
-	{43, "ARM64", "PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8.2 DP instructions (for example, SDOT, UDOT). This feature is optional in Arm v8.2 implementations and mandatory in Arm v8.4 implementations."},
-	{44, "ARM64", "PF_ARM_V83_JSCVT_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8.3 JSCVT instructions (for example, FJCVTZS)."},
-	{45, "ARM64", "PF_ARM_V83_LRCPC_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8.3 LRCPC instructions (for example, LDAPR). Note that certain Arm v8.2 CPUs may optionally support the LRCPC instructions."},
+	{29, "arm64", "PF_ARM_V8_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8 instructions set."},
+	{30, "arm64", "PF_ARM_V8_CRYPTO_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8 extra cryptographic instructions (for example, AES, SHA1 and SHA2)."},
+	{31, "arm64", "PF_ARM_V8_CRC32_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8 extra CRC32 instructions."},
+	{34, "arm64", "PF_ARM_V81_ATOMIC_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8.1 atomic instructions (for example, CAS, SWP)."},
+	{43, "arm64", "PF_ARM_V82_DP_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8.2 DP instructions (for example, SDOT, UDOT). This feature is optional in Arm v8.2 implementations and mandatory in Arm v8.4 implementations."},
+	{44, "arm64", "PF_ARM_V83_JSCVT_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8.3 JSCVT instructions (for example, FJCVTZS)."},
+	{45, "arm64", "PF_ARM_V83_LRCPC_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8.3 LRCPC instructions (for example, LDAPR). Note that certain Arm v8.2 CPUs may optionally support the LRCPC instructions."},
 }
 
 // IsProcessorFeaturesPresent returns true when the feature identified by the number is present.
@@ -69,39 +68,4 @@ func IsProcessorFeaturesPresent(i uint32) (bool, error) {
 	}
 	r1, _, _ := syscall.SyscallN(p.Addr(), uintptr(i))
 	return r1 != 0, nil
-}
-
-// SetGOARMv sets GOARM and GOARM64 and returns ARM64, 7 or 6 depending on identified processor features.
-func SetGOARMv() (v string, err error) {
-	v = "ARM64"
-	if m := IsVersionComplete(v); len(m) == 0 {
-		err = os.Unsetenv("GOARM")
-		if err != nil {
-			return
-		}
-		err = os.Setenv("GOARCH", "ARM64")
-		if err != nil {
-			return
-		}
-		return
-	}
-	err = os.Setenv("GOARCH", "ARM")
-	if err != nil {
-		return
-	}
-	v = "7"
-	if m := IsVersionComplete(v); len(m) == 0 {
-		err = os.Setenv("GOARM", v)
-		if err != nil {
-			return
-		}
-		return
-	}
-	// TODO Check that 6 is set for all
-	v = "6" // Default
-	err = os.Setenv("GOARM", v)
-	if err != nil {
-		return
-	}
-	return
 }
