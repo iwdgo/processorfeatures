@@ -1,0 +1,34 @@
+name: Processor features
+on:
+  push:
+    branches:
+      - master
+jobs:
+  checkfeatures:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v3
+      - name: Set up Go latest
+        uses: actions/setup-go@v4
+      - name: Complete Go set up
+        shell: bash
+        run: |
+          export ${{ inputs.go_variables }}
+          mkdir -p $(go env GOCACHE)
+          mkdir -p $(go env GOMODCACHE)
+          mkdir -p $(dirname $(go env GOENV))
+          mkdir -p $(go env GOPATH)/bin
+          echo $PATH
+
+      - name: Vet
+        run: go vet ./...
+      - name: Install
+        run: go install ./...
+      - name: Test
+        run: go test -v ./...
+      - name: Use
+        run: export $(go run ./setprocessor)
