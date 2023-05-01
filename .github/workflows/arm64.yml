@@ -29,7 +29,13 @@ jobs:
           docker exec -w /tmp xarm64 mkdir -p $(go env GOPATH)/bin
           docker exec -w /tmp xarm64 echo $PATH
           docker exec -w /tmp xarm64 go version
-          docker exec -w /tmp xarm64 go install github.com/iwdgo/processorfeatures@latest
-          docker exec -w /tmp xarm64 go go test -v github.com/iwdgo/processorfeatures
-          export $(go run ./setprocessor)
+          # copy of checked out code
+          pwd
+          ls -l
+          docker exec xarm64 mkdir -p /tmp/processorfeatures/setprocessor
+          docker cp ./processorfeatures xarm64:/tmp/processorfeatures
+          docker exec -w /tmp/processorfeatures xarm64 go test -v ./...
+          # test command
+          docker exec -w /tmp xarm64 go install github.com/iwdgo/processorfeatures/setprocessor@latest
+          docker exec xarm64 export $(setprocessor)
           go env
