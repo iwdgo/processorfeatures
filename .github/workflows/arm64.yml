@@ -33,7 +33,7 @@ jobs:
           pwd
           ls -l
           docker exec xarm64 mkdir -p /tmp/processorfeatures/setprocessor
-          docker cp ./processorfeatures xarm64:/tmp/processorfeatures
+          docker cp ./. xarm64:/tmp/processorfeatures
           docker exec -w /tmp/processorfeatures xarm64 go test -v ./...
           # test command
           docker exec -w /tmp xarm64 go install github.com/iwdgo/processorfeatures/setprocessor@latest
