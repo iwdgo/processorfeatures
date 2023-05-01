@@ -4,7 +4,7 @@ on:
     branches:
       - master
 jobs:
-    name: arm64 processor features
+  checkfeatures:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code into the Go module directory
