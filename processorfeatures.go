@@ -38,7 +38,6 @@ func IsVersionComplete(v string) (missing []uint32) {
 					missing = append(missing, f.i)
 				}
 			} else {
-				// TODO error is only about loading DLL
 				missing = append(missing, f.i)
 			}
 		}
