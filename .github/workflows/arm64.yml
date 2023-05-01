@@ -1,0 +1,34 @@
+name: Processor features
+on:
+  push:
+    branches:
+      - master
+jobs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v3
+      - name: Set up Go latest
+        uses: actions/setup-go@v4
+      - name: Run under QEMU
+        shell: bash
+        run: |
+          # complete Go set up
+          mkdir -p $(go env GOCACHE)
+          mkdir -p $(go env GOMODCACHE)
+          mkdir -p $(dirname $(go env GOENV))
+          mkdir -p $(go env GOPATH)/bin
+          echo $PATH
+          # load docker image with QEMU
+          docker run --rm --privileged tonistiigi/binfmt:latest --install arm64
+          docker run -d -t --platform arm64 --name xarm64 arm64v8/golang
+          docker exec -w /tmp xarm64 mkdir -p $(go env GOCACHE)
+          docker exec -w /tmp xarm64 mkdir -p $(go env GOMODCACHE)
+          docker exec -w /tmp xarm64 mkdir -p $(dirname $(go env GOENV))
+          docker exec -w /tmp xarm64 mkdir -p $(go env GOPATH)/bin
+          docker exec -w /tmp xarm64 echo $PATH
+          docker exec -w /tmp xarm64 ./bin/go version
+          docker exec -w /tmp xarm64 ./bin/go install github.com/iwdgo/processorfeatures
+          docker exec -w /tmp xarm64 ./bin/go go test -v github.com/iwdgo/processorfeatures
+          export $(go run ./setprocessor)
+          go env
