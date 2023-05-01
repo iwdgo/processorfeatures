@@ -8,16 +8,16 @@
 
 [Processor variables](https://go.dev/doc/install/source#environment) direct the Go compiler to use some processor instructions.
 The variable has an effect only when cross-compiling or re-compiling go locally.
-Purpose of the module is to detect processor characteristics and set the relevant processor variable accordingly.
+The intent is to ease the detection of processor characteristics and the set of the related processor variables.
 
 ## Linux
 
-File '/proc/cpuinfo' is parsed to locate all flags.
+File `/proc/cpuinfo` is parsed to locate all flags.
 Reported flags are used to determine version of processor.
 
 ## Windows
 
-Win32 API call `IsProcessorFeaturePresent` is used to collect the features of the processor.
+Win32 API call [`IsProcessorFeaturePresent`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocessorfeaturepresent) is used to collect the features of the processor.
 
 ### AMD64
 
@@ -34,7 +34,6 @@ If v8 instruction set is available, GOARM is unset and GOARCH is set to ARM64.
 # References
 
 ### AMD64
-[Processor features on Win32 API](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocessorfeaturepresent)
 [Microarchitecture_levels](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels)
 
 A more detailed [discussion](https://github.com/golang/go/issues/50589) confirms that default is GOAMD64 is v1.
