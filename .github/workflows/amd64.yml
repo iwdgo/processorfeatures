@@ -31,4 +31,5 @@ jobs:
       - name: Test
         run: go test -v ./...
       - name: Use
+        shell: bash
         run: export $(go run ./setprocessor)
