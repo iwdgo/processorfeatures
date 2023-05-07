@@ -28,14 +28,22 @@ jobs:
           docker exec -w /tmp xarm64 mkdir -p $(dirname $(go env GOENV))
           docker exec -w /tmp xarm64 mkdir -p $(go env GOPATH)/bin
           docker exec -w /tmp xarm64 echo $PATH
-          docker exec -w /tmp xarm64 go version
-          # copy of checked out code
+          docker exec xarm64 go version
+          docker exec xarm64 go env
+          # Set GOARCH/GOARM on image
+          docker exec xarm64 go install github.com/iwdgo/processorfeatures/setprocessor@set-arm64-test
+          # docker exec xarm64 cp /go/bin/setprocessor /home/runner/go/bin/
+          # Test module on image
           pwd
           ls -l
           docker exec xarm64 mkdir -p /tmp/processorfeatures/setprocessor
           docker cp ./. xarm64:/tmp/processorfeatures
+          # Test
           docker exec -w /tmp/processorfeatures xarm64 go test -v ./...
-          # test command
-          docker exec -w /tmp xarm64 go install github.com/iwdgo/processorfeatures/setprocessor@latest
+          # Set processor
+          docker exec -w /go xarm64 ./bin/setprocessor
+          # docker exec -w /go xarm64 go env -w $(./bin/setprocessor)
+          # docker exec -w /go xarm64 ./bin/go env -w $(./bin/setprocessor)
+          # Results
           docker exec xarm64 export $(setprocessor)
-          go env
+          docker exec xarm64 go env GOARCH GOARM
