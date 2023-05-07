@@ -22,8 +22,7 @@ jobs:
           mkdir -p $(go env GOMODCACHE)
           mkdir -p $(dirname $(go env GOENV))
           mkdir -p $(go env GOPATH)/bin
-          echo $PATH
-
+          echo $(go env GOPATH)/bin "is in" $PATH
       - name: Vet
         run: go vet ./...
       - name: Install

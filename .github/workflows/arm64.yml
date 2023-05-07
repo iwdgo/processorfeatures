@@ -19,7 +19,7 @@ jobs:
           mkdir -p $(go env GOMODCACHE)
           mkdir -p $(dirname $(go env GOENV))
           mkdir -p $(go env GOPATH)/bin
-          echo $PATH
+          echo $(go env GOPATH)/bin "is in" $PATH
           # load docker image with QEMU
           docker run --rm --privileged tonistiigi/binfmt:latest --install arm64
           docker run -d -t --platform arm64 --name xarm64 arm64v8/golang
