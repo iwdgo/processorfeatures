@@ -61,8 +61,8 @@ func TestSetGOARMv(t *testing.T) {
 }
 
 func TestIsVersionComplete(t *testing.T) {
-	if runtime.GOOS != "amd64" {
-		t.Skip("not an amd64 processor")
+	if runtime.GOARCH != "amd64" {
+		t.Skipf("not amd64 but %s", runtime.GOARCH)
 	}
 	// TODO Should display all complete or missing items
 	v := os.Getenv("GOAMD64")
