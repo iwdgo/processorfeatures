@@ -23,14 +23,18 @@ jobs:
           mkdir -p $(dirname $(go env GOENV))
           mkdir -p $(go env GOPATH)/bin
           echo $(go env GOPATH)/bin "is in" $PATH
+      - name: Build
+        run: go build ./...
       - name: Vet
         run: go vet ./...
-      - name: Install
-        run: go install ./...
       - name: Test
         run: go test -v ./...
       - name: Use
         shell: bash
         run: |
-          export $(go run ./setprocessor)
-          go env -w $(go run ./setprocessor)
+          go install github.com/iwdgo/processorfeatures/setprocessor@amd64
+          ls $(go env GOPATH)/bin
+          $(go env GOPATH)/bin/setprocessor
+          export $(setprocessor)
+          go env -w $(setprocessor)
+          echo "result = " $(go env GOAMD64)
