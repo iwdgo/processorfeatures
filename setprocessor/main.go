@@ -15,8 +15,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("Set GOAMD64 failed with %v", err)
 		}
-		fmt.Printf("GOAMD64=%s", v)
-		return
+		fmt.Printf("GOAMD64=%s\n", v)
 	case "arm", "arm64":
 		v, err := processorfeatures.SetGOARMv()
 		if err != nil {
@@ -26,8 +25,7 @@ func main() {
 			fmt.Println("GOARCH=arm64 GOARM=")
 			return
 		}
-		fmt.Printf("GOARCH=arm GOARM=%s", v)
-		return
+		fmt.Printf("GOARCH=arm GOARM=%s\n", v)
 	default:
 		fmt.Println("not implemented")
 	}
