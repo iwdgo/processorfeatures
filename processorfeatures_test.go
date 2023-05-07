@@ -42,7 +42,8 @@ func TestSetGOARMv(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if runtime.GOARCH != "arm64" {
+	t.Log(v)
+	if runtime.GOARCH == "arm64" {
 		if s := os.Getenv("GOARCH"); s != v {
 			t.Errorf("got %s, want %s", s, v)
 		}
@@ -54,8 +55,8 @@ func TestSetGOARMv(t *testing.T) {
 	if s := os.Getenv("GOARM"); s != v {
 		t.Errorf("got %s, want %s", s, v)
 	}
-	if s := os.Getenv("GOARM64"); s != "" {
-		t.Errorf("ARM: Unexpected value set for GOARM64: %s", s)
+	if g, w := os.Getenv("GOARCH"), "arm"; g != w {
+		t.Errorf("GOARCH: got %s, want %s", g, w)
 	}
 }
 
