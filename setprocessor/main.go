@@ -13,14 +13,14 @@ func main() {
 	case "amd64":
 		v, err := processorfeatures.SetGOAMD64v()
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("Set GOAMD64 failed with %v", err)
 		}
 		fmt.Printf("GOAMD64=%s", v)
 		return
 	case "arm", "arm64":
 		v, err := processorfeatures.SetGOARMv()
 		if err != nil {
-			log.Fatalf("%v", err)
+			log.Fatalf("Set GOARM or GOARCH failed with %v", err)
 		}
 		if v == "arm64" {
 			fmt.Println("GOARCH=arm64 GOARM=")
