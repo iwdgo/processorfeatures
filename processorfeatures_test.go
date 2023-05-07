@@ -23,7 +23,7 @@ func TestIsProcessorFeaturesPresent_all(t *testing.T) {
 
 func TestSetGOAMD64v(t *testing.T) {
 	if runtime.GOARCH != "amd64" {
-		t.Skip("Not an AMD64 processor. Skipping.")
+		t.Skipf("not amd64 but %s. Skipping.", runtime.GOARCH)
 	}
 	v, err := SetGOAMD64v()
 	if err != nil {
@@ -36,7 +36,8 @@ func TestSetGOAMD64v(t *testing.T) {
 
 func TestSetGOARMv(t *testing.T) {
 	if runtime.GOARCH != "arm" && runtime.GOARCH != "arm64" {
-		t.Skip("Not an ARM processor. Skipping.")
+		t.Skipf("not arm but %s. Skipping.", runtime.GOARCH)
+
 	}
 	v, err := SetGOARMv()
 	if err != nil {
@@ -62,7 +63,7 @@ func TestSetGOARMv(t *testing.T) {
 
 func TestIsVersionComplete(t *testing.T) {
 	if runtime.GOARCH != "amd64" {
-		t.Skipf("not amd64 but %s", runtime.GOARCH)
+		t.Skipf("not amd64 but %s. Skipping.", runtime.GOARCH)
 	}
 	// TODO Should display all complete or missing items
 	v := os.Getenv("GOAMD64")
