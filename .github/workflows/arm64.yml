@@ -41,6 +41,8 @@ jobs:
           # Test
           docker exec -w /tmp/processorfeatures xarm64 go test -v ./...
           # Set processor
+          docker exec xarm64 cp /go/bin/setprocessor /home/runner/go/bin/
+          docker exec -w /go xarm64 pwd
           docker exec -w /go xarm64 ./bin/setprocessor
           # docker exec -w /go xarm64 go env -w $(./bin/setprocessor)
           # docker exec -w /go xarm64 ./bin/go env -w $(./bin/setprocessor)
