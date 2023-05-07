@@ -30,7 +30,7 @@ jobs:
           docker exec -w /tmp xarm64 echo $PATH
           docker exec xarm64 go version
           docker exec xarm64 go env
-          docker exec xarm64 go install github.com/iwdgo/processorfeatures/setprocessor@master
+          docker exec xarm64 go install github.com/iwdgo/processorfeatures/setprocessor@latest
           # Test module on image
           docker exec xarm64 mkdir -p /tmp/processorfeatures/setprocessor
           docker cp ./. xarm64:/tmp/processorfeatures

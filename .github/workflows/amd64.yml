@@ -32,7 +32,7 @@ jobs:
       - name: Use
         shell: bash
         run: |
-          go install github.com/iwdgo/processorfeatures/setprocessor@amd64
+          go install github.com/iwdgo/processorfeatures/setprocessor@latest
           ls $(go env GOPATH)/bin
           $(go env GOPATH)/bin/setprocessor
           export $(setprocessor)
