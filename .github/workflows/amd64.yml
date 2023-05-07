@@ -1,4 +1,4 @@
-name: Processor features
+name: amd64
 on:
   push:
     branches:
