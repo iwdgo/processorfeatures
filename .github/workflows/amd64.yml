@@ -32,4 +32,6 @@ jobs:
         run: go test -v ./...
       - name: Use
         shell: bash
-        run: export $(go run ./setprocessor)
+        run: |
+          export $(go run ./setprocessor)
+          go env -w $(go run ./setprocessor)
