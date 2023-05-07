@@ -45,7 +45,7 @@ func IsVersionComplete(v string) (missing []uint32) {
 	return missing
 }
 
-// SetGOARMv sets GOARM and GOARM64 and returns ARM64, 7 or 6 depending on identified processor features.
+// SetGOARMv sets GOARM and GOARCH and returns arm64, 7 or 6 depending on identified processor features.
 func SetGOARMv() (v string, err error) {
 	v = "arm64"
 	if m := IsVersionComplete(v); len(m) == 0 {
