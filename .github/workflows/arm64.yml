@@ -47,5 +47,5 @@ jobs:
           # docker exec -w /go xarm64 go env -w $(./bin/setprocessor)
           # docker exec -w /go xarm64 ./bin/go env -w $(./bin/setprocessor)
           # Results
-          docker exec xarm64 export $(setprocessor)
+          docker exec -w /go xarm64 export $(./bin/setprocessor)
           docker exec xarm64 go env GOARCH GOARM
