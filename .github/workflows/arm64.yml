@@ -31,7 +31,7 @@ jobs:
           docker exec xarm64 go version
           docker exec xarm64 go env
           # Set GOARCH/GOARM on image
-          docker exec xarm64 go install github.com/iwdgo/processorfeatures/setprocessor@set-arm64-test
+          docker exec xarm64 go install github.com/iwdgo/processorfeatures/setprocessor@master
           # docker exec xarm64 cp /go/bin/setprocessor /home/runner/go/bin/
           # Test module on image
           pwd
