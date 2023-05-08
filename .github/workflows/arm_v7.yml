@@ -1,0 +1,47 @@
+name: arm v7
+on: [push]
+
+jobs:
+  checkfeatures:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v3
+      - name: Set up Go latest
+        uses: actions/setup-go@v4
+      - name: Run under QEMU
+        shell: bash
+        run: |
+          # complete Go set up
+          mkdir -p $(go env GOCACHE)
+          mkdir -p $(go env GOMODCACHE)
+          mkdir -p $(dirname $(go env GOENV))
+          mkdir -p $(go env GOPATH)/bin
+          echo $(go env GOPATH)/bin "is in" $PATH
+          # load docker image with QEMU
+          docker run --rm --privileged tonistiigi/binfmt:latest --install arm
+          docker run -d -t --platform arm --name xgolang arm32v7/golang
+          docker exec -w /tmp xgolang mkdir -p $(go env GOCACHE)
+          docker exec -w /tmp xgolang mkdir -p $(go env GOMODCACHE)
+          docker exec -w /tmp xgolang mkdir -p $(dirname $(go env GOENV))
+          docker exec -w /tmp xgolang mkdir -p $(go env GOPATH)/bin
+          docker exec -w /tmp xgolang echo $PATH
+          docker exec xgolang go version
+          docker exec xgolang go env
+          docker exec xgolang go install github.com/iwdgo/processorfeatures/setprocessor@latest
+          # Processor features from OS
+          docker exec xgolang arch
+          docker exec xgolang lscpu
+          docker exec xgolang cat /proc/cpuinfo
+          # Test module on image
+          docker exec xgolang mkdir -p /tmp/processorfeatures/setprocessor
+          docker cp ./. xgolang:/tmp/processorfeatures
+          docker exec -w /tmp/processorfeatures xgolang go test -v ./...
+          # Set processor
+          docker exec xgolang cp /go/bin/setprocessor /home/runner/go/bin/
+          docker exec -w /go xgolang ./bin/setprocessor
+          # docker exec -w /go xgolang go env $(./bin/setprocessor)
+          # Results
+          # No shell
+          # docker exec -w /go xgolang export $(./bin/setprocessor)
+          docker exec xgolang go env GOARCH GOARM
