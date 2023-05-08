@@ -5,6 +5,7 @@ package processorfeatures
 import (
 	"bytes"
 	"errors"
+	"log"
 	"os"
 )
 
@@ -118,6 +119,7 @@ func loadflags() error {
 	features := bytes.Split(flags, []byte(" "))
 	i, j := 0, 0
 	var f string
+	var found bool
 	for {
 		if i == len(features) {
 			break
@@ -134,12 +136,18 @@ func loadflags() error {
 			continue
 		}
 		// search entry
+		found = false
 		for k, pf := range ProcessorFeatures {
 			if f == pf.s {
 				// flag is found but not at the same place, i.e. order has changed
 				featuresstatus[k] = true
 				j = k + 1
+				found = true
+				break
 			}
+		}
+		if !found {
+			log.Printf("please add feature to ProcessorFeatures %s", f)
 		}
 		i++
 	}
