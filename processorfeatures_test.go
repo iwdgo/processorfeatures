@@ -14,7 +14,7 @@ func TestIsProcessorFeaturesPresent_all(t *testing.T) {
 			t.Fatal(err)
 		}
 		if b {
-			t.Logf("%s: %s", f.s, f.doc)
+			t.Logf("%s : %s", f.s, f.doc)
 			c++
 		}
 	}
