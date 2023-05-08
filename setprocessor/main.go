@@ -1,4 +1,4 @@
-// package setprocessor returns Go variables to set using bash export
+// package setprocessor returns processor variables in the format of go env
 package main
 
 import (

@@ -2,7 +2,8 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/iwdgo/processorfeatures)](https://goreportcard.com/report/github.com/iwdgo/processorfeatures)
 [![codecov](https://codecov.io/gh/iwdgo/processorfeatures/branch/master/graph/badge.svg)](https://codecov.io/gh/iwdgo/processorfeatures)
 
-[![Go](https://github.com/iwdgo/processorfeatures/actions/workflows/go.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/go.yml)
+[![amd64](https://github.com/iwdgo/processorfeatures/actions/workflows/amd64.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/go.yml)
+[![arm](https://github.com/iwdgo/processorfeatures/actions/workflows/arm.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/go.yml)
 
 # Processor characteristics 
 
