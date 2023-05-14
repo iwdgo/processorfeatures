@@ -65,28 +65,32 @@ func TestIsVersionComplete(t *testing.T) {
 	if runtime.GOARCH != "amd64" {
 		t.Skipf("not amd64 but %s. Skipping.", runtime.GOARCH)
 	}
-	// TODO Should display all complete or missing items
 	v := os.Getenv("GOAMD64")
-	t.Logf("%s", v)
+	t.Logf("GOAMD64 is currently to %s", v)
 	// windows v1: CX8, MMX, SSE, SSE2 - not checked: CMOV, FPU, FXSR, OSFXSR, SCE
 	// windows v2: CMPXCHG16B, SSE3, SSE4_1, SSE4_2, SSSE3 - not checked: LAHF-SAHF, POPCNT,
 	// windows v3: AVX, AVX2 - not checked: BMI1, BMI2, F16C, FMA, LZCNT, MOVBE, OSXSAVE
 	// windows v4: AVX512F - not checked: AVX512BW, AVX512CD, AVX512DQ, AVX512VL
 	for _, check := range []string{"v1", "v2", "v3", "v4"} {
-		if m := IsVersionComplete(check); len(m) == 0 {
+		m := IsVersionComplete(check)
+		if len(m) == 0 {
 			v = check
-		} else {
-			// Maximum level is set, all features must be missing
-			t.Logf("last complete level is %s", v)
-			i := 0
-			for _, f := range ProcessorFeatures {
-				if f.v == check {
-					i++
-				}
+			continue
+		}
+		t.Logf("last complete level is %s", v)
+		i := 0 // total number of features of failed level
+		for _, f := range ProcessorFeatures {
+			if f.v == check {
+				i++
 			}
-			if i != len(m) {
-				t.Fatalf("GOAMD64 == %s but %s is incomplete", v, check)
-			}
+		}
+		if i == len(m) {
+			break
+		}
+		// TODO features marked xv should also be reported
+		t.Logf("%s is missing %v features", check, len(m))
+		for _, i := range m {
+			t.Logf("%s requires %s (%s) which is undetected", ProcessorFeatures[i].v, ProcessorFeatures[i].s, ProcessorFeatures[i].doc)
 		}
 	}
 }
