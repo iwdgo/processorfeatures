@@ -2,8 +2,10 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/iwdgo/processorfeatures)](https://goreportcard.com/report/github.com/iwdgo/processorfeatures)
 [![codecov](https://codecov.io/gh/iwdgo/processorfeatures/branch/master/graph/badge.svg)](https://codecov.io/gh/iwdgo/processorfeatures)
 
-[![amd64](https://github.com/iwdgo/processorfeatures/actions/workflows/amd64.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/go.yml)
-[![arm](https://github.com/iwdgo/processorfeatures/actions/workflows/arm.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/go.yml)
+[![amd64](https://github.com/iwdgo/processorfeatures/actions/workflows/amd64.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/amd64.yml)
+[![arm v8](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v8.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v8.yml)
+[![arm v7](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v7.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v7.yml)
+[![arm v6](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v6.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v6.yml)
 
 # Processor characteristics 
 
@@ -13,7 +15,7 @@ The intent is to ease the detection of processor characteristics and the set of 
 
 ## Linux
 
-File `/proc/cpuinfo` is parsed to locate all flags.
+Pseudo-file `/proc/cpuinfo` is parsed to load processor flags.
 Reported flags are used to determine version of processor.
 
 ## Windows
@@ -27,17 +29,17 @@ Impact should be limited as the standard expects instructions to all be present 
 Level is set when all verifiable features are present.
 Details are available in the structure `ProcessorFeatures`.
 
-### ARM
+### ARM 
 
 The availability of VFP defines level 6 or higher for GOARM.
 If v8 instruction set is available, GOARM is unset and GOARCH is set to ARM64. 
 
-# References
+## Further reading
 
-### AMD64
+### amd64
+
 [Microarchitecture_levels](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels)
-
-A more detailed [discussion](https://github.com/golang/go/issues/50589) confirms that default is GOAMD64 is v1.
+Default for Go on amd64 is [v1](https://github.com/golang/go/issues/50589).
 
 ### ARM
 
@@ -45,4 +47,4 @@ https://stackoverflow.com/questions/19844575/how-to-do-division-in-arm
 
 ### Version history
 
-API is still a prototype
+API is in development. ARM is under development.
