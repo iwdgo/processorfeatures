@@ -22,24 +22,24 @@ jobs:
           echo $(go env GOPATH)/bin "is in" $PATH
           # load docker image with QEMU
           docker run --rm --privileged tonistiigi/binfmt:latest --install arm64
-          docker run -d -t --platform arm64 --name xarm64 arm64v8/golang
-          docker exec -w /tmp xarm64 mkdir -p $(go env GOCACHE)
-          docker exec -w /tmp xarm64 mkdir -p $(go env GOMODCACHE)
-          docker exec -w /tmp xarm64 mkdir -p $(dirname $(go env GOENV))
-          docker exec -w /tmp xarm64 mkdir -p $(go env GOPATH)/bin
-          docker exec -w /tmp xarm64 echo $PATH
-          docker exec xarm64 go version
-          docker exec xarm64 go env
-          docker exec xarm64 go install github.com/iwdgo/processorfeatures/setprocessor@latest
+          docker run -d -t --platform arm64 --name xgolang arm64v8/golang
+          docker exec -w /tmp xgolang mkdir -p $(go env GOCACHE)
+          docker exec -w /tmp xgolang mkdir -p $(go env GOMODCACHE)
+          docker exec -w /tmp xgolang mkdir -p $(dirname $(go env GOENV))
+          docker exec -w /tmp xgolang mkdir -p $(go env GOPATH)/bin
+          docker exec -w /tmp xgolang echo $PATH
+          docker exec xgolang go version
+          docker exec xgolang go env
+          docker exec xgolang go install github.com/iwdgo/processorfeatures/setprocessor@latest
           # Test module on image
-          docker exec xarm64 mkdir -p /tmp/processorfeatures/setprocessor
-          docker cp ./. xarm64:/tmp/processorfeatures
-          docker exec -w /tmp/processorfeatures xarm64 go test -v ./...
+          docker exec xgolang mkdir -p /tmp/processorfeatures/setprocessor
+          docker cp ./. xgolang:/tmp/processorfeatures
+          docker exec -w /tmp/processorfeatures xgolang go test -v ./...
           # Set processor
-          docker exec xarm64 cp /go/bin/setprocessor /home/runner/go/bin/
-          docker exec -w /go xarm64 ./bin/setprocessor
+          docker exec xgolang cp /go/bin/setprocessor /home/runner/go/bin/
+          docker exec -w /go xgolang ./bin/setprocessor
           docker exec xgolang LD_SHOW_AUXV=1 sleep 1
-          # docker exec -w /go xarm64 go env $(./bin/setprocessor)
+          # docker exec -w /go xgolang go env $(./bin/setprocessor)
           # Results
           # No shell
-          docker exec xarm64 go env GOARCH GOARM
+          docker exec xgolang go env GOARCH GOARM
