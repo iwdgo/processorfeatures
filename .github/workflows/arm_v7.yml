@@ -36,6 +36,7 @@ jobs:
           docker exec xgolang arch
           docker exec xgolang lscpu
           docker exec xgolang cat /proc/cpuinfo
+          docker exec xgolang LD_SHOW_AUXV=1 sleep 1
           # Test module on image
           docker exec xgolang mkdir -p /tmp/processorfeatures/setprocessor
           docker cp ./. xgolang:/tmp/processorfeatures
