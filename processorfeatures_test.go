@@ -9,12 +9,12 @@ import (
 func TestIsProcessorFeaturesPresent_all(t *testing.T) {
 	c := 0
 	for _, f := range ProcessorFeatures {
-		b, err := IsProcessorFeaturesPresent(f.i)
+		b, err := IsProcessorFeaturesPresent(f.I)
 		if err != nil {
 			t.Fatal(err)
 		}
 		if b {
-			t.Logf("%s : %s", f.s, f.doc)
+			t.Logf("%s : %s", f.S, f.Doc)
 			c++
 		}
 	}
@@ -66,7 +66,7 @@ func TestIsVersionComplete(t *testing.T) {
 		t.Skipf("not amd64 but %s. Skipping.", runtime.GOARCH)
 	}
 	v := os.Getenv("GOAMD64")
-	t.Logf("GOAMD64 is currently to %s", v)
+	t.Logf("GOAMD64 is set to %s", v)
 	// windows v1: CX8, MMX, SSE, SSE2 - not checked: CMOV, FPU, FXSR, OSFXSR, SCE
 	// windows v2: CMPXCHG16B, SSE3, SSE4_1, SSE4_2, SSSE3 - not checked: LAHF-SAHF, POPCNT,
 	// windows v3: AVX, AVX2 - not checked: BMI1, BMI2, F16C, FMA, LZCNT, MOVBE, OSXSAVE
@@ -80,17 +80,16 @@ func TestIsVersionComplete(t *testing.T) {
 		t.Logf("last complete level is %s", v)
 		i := 0 // total number of features of failed level
 		for _, f := range ProcessorFeatures {
-			if f.v == check {
+			if f.V == check {
 				i++
 			}
 		}
 		if i == len(m) {
 			break
 		}
-		// TODO features marked xv should also be reported
 		t.Logf("%s is missing %v features", check, len(m))
 		for _, i := range m {
-			t.Logf("%s requires %s (%s) which is undetected", ProcessorFeatures[i].v, ProcessorFeatures[i].s, ProcessorFeatures[i].doc)
+			t.Logf("%s requires %s (%s) which is undetected", ProcessorFeatures[i].V, ProcessorFeatures[i].S, ProcessorFeatures[i].Doc)
 		}
 	}
 }

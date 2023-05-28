@@ -1,13 +1,15 @@
 // Package processorfeatures provides details on the available processor features
 package processorfeatures
 
-import "os"
+import (
+	"os"
+)
 
 type ProcessorFeature struct {
-	i   uint32 // Feature number
-	v   string // Version when defined by standard.
-	s   string // Flag name
-	doc string // Documentation
+	I   uint32 // Feature number
+	V   string // Version when defined by standard.
+	S   string // Flag name
+	Doc string // Documentation
 }
 
 // IsProcessorFeaturesPresent returns true when the feature identified by the number is present.
@@ -32,13 +34,13 @@ func SetGOAMD64v() (v string, err error) {
 // IsVersionComplete verifies all features listed for version v
 func IsVersionComplete(v string) (missing []uint32) {
 	for _, f := range ProcessorFeatures {
-		if f.v == v {
-			if b, err := IsProcessorFeaturesPresent(f.i); err == nil {
+		if f.V == v {
+			if b, err := IsProcessorFeaturesPresent(f.I); err == nil {
 				if !b {
-					missing = append(missing, f.i)
+					missing = append(missing, f.I)
 				}
 			} else {
-				missing = append(missing, f.i)
+				missing = append(missing, f.I)
 			}
 		}
 	}

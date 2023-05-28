@@ -190,7 +190,7 @@ func loadflags() error {
 		}
 		f = string(features[i])
 		// flag will often be the next one
-		if ProcessorFeatures[j].s == f {
+		if ProcessorFeatures[j].S == f {
 			featuresstatus[j] = true
 			i++
 			j++
@@ -199,7 +199,7 @@ func loadflags() error {
 		// search entry
 		found = false
 		for k, pf := range ProcessorFeatures {
-			if f == pf.s {
+			if f == pf.S {
 				// flag is found but not at the same place, i.e. order has changed
 				featuresstatus[k] = true
 				j = k + 1
