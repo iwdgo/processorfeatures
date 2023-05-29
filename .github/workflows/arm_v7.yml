@@ -35,7 +35,6 @@ jobs:
           # Processor features from OS
           docker exec xgolang arch
           docker exec xgolang cat /proc/cpuinfo
-          # docker exec xgolang LD_SHOW_AUXV=1 sleep 1
           # Test module on image
           docker exec xgolang mkdir -p /tmp/processorfeatures/setprocessor
           docker cp ./. xgolang:/tmp/processorfeatures
@@ -43,8 +42,6 @@ jobs:
           # Set processor
           docker exec xgolang cp /go/bin/setprocessor /home/runner/go/bin/
           docker exec -w /go xgolang ./bin/setprocessor
-          # docker exec -w /go xgolang go env $(./bin/setprocessor)
+          docker exec -w /go xgolang go env -w $(./bin/setprocessor)
           # Results
-          # No shell
-          # docker exec -w /go xgolang export $(./bin/setprocessor)
           docker exec xgolang go env GOARCH GOARM
