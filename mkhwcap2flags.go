@@ -1,6 +1,6 @@
 //go:build ignore
 
-// Generate hwcapflags_*.go files using last copy of elf.h_include
+// Generate hwcap2flags_*.go files using last copy of elf.h_include
 package main
 
 import (
@@ -110,10 +110,9 @@ func main() {
 		_, _ = fmt.Fprintf(w, "//go:build %s\n", goarch)
 		_, _ = fmt.Fprintf(w, "// Code generated using 'go generate'; DO NOT EDIT.\n")
 		_, _ = fmt.Fprintln(w, "// package buildref contains the the HWCAP flags for each architecture")
-		_, _ = fmt.Fprintln(w, "//go:generate go run mkhwcapflags.go")
-		_, _ = fmt.Fprintln(w, "package hwcapflags")
-		_, _ = fmt.Fprintln(w, `import "github.com/iwdgo/processorfeatures"`)
-		_, _ = fmt.Fprintf(w, "var ProcessorFeatures = []processorfeatures.ProcessorFeature{\n")
+		_, _ = fmt.Fprintln(w, "//go:generate go run mkhwcap2flags.go")
+		_, _ = fmt.Fprintln(w, "package processorfeatures")
+		_, _ = fmt.Fprintf(w, "var AuxvFeatures = []ProcessorFeature{\n")
 		w = featuresToFile(w, string(prefix), strings.Join(selected, "\n"))
 		_, _ = fmt.Fprintf(w, "}")
 
@@ -124,7 +123,7 @@ func main() {
 			panic(err)
 		}
 
-		if err := os.WriteFile(fmt.Sprintf("hwcapflags_%s.go", goarch), b, 0666); err != nil {
+		if err := os.WriteFile(fmt.Sprintf("hwcap2flags_%s.go", goarch), b, 0666); err != nil {
 			log.Fatalf("can't write output: %v\n", err)
 		}
 	}

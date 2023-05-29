@@ -3,12 +3,10 @@
 // Code generated using 'go generate'; DO NOT EDIT.
 // package buildref contains the the HWCAP flags for each architecture
 //
-//go:generate go run mkhwcapflags.go
-package hwcapflags
+//go:generate go run mkhwcap2flags.go
+package processorfeatures
 
-import "github.com/iwdgo/processorfeatures"
-
-var ProcessorFeatures = []processorfeatures.ProcessorFeature{
+var AuxvFeatures = []ProcessorFeature{
 	{0, "", "rm_none", "R_ARM_NONE  0"},
 	{1, "", "rm_pc24", "R_ARM_PC24  1"},
 	{2, "", "rm_abs32", "R_ARM_ABS32  2"},

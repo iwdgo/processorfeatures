@@ -158,6 +158,7 @@ var ProcessorFeatures = []ProcessorFeature{
 var (
 	filled         = false
 	featuresstatus = make([]bool, len(ProcessorFeatures))
+	auxvstatus     = make([]bool, len(AuxvFeatures))
 )
 
 // loadflags loads processor flags as returned by a command like `cat proc/cpuinfo`
@@ -212,6 +213,8 @@ func loadflags() error {
 		}
 		i++
 	}
+	hwcap2 := LoadHWCAP2()
+	log.Printf("%x", hwcap2)
 	return nil
 }
 
