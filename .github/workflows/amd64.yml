@@ -1,4 +1,4 @@
-name: amd64
+name: amd64 ubuntu
 on:
   push:
     branches:
