@@ -3,7 +3,6 @@ package processorfeatures
 import (
 	"bytes"
 	"encoding/binary"
-	"log"
 	"os"
 )
 
@@ -67,10 +66,12 @@ const (
 	AT_MINSIGSTKSZ = 51
 )
 
-func LoadHWCAP2() uint64 {
+// LoadHWCAP2 returns HWCAP2 as a uint64 by reading /proc/self/auxv.
+// An error is returned otherwise. If the error is io.EOF, HWCAP2 is not found.
+func LoadHWCAP2() (uint64, error) {
 	buf, err := os.ReadFile("/proc/self/auxv")
 	if err != nil {
-		log.Fatalf("%v", err)
+		return 0, err
 	}
 	var w, v uint64
 	reader := bytes.NewReader(buf)
@@ -78,18 +79,15 @@ func LoadHWCAP2() uint64 {
 	for {
 		err = binary.Read(reader, binary.LittleEndian, &w)
 		if err != nil {
-			log.Println(err)
-			break
+			return 0, err
 		}
 		err = binary.Read(reader, binary.LittleEndian, &v)
 		if err != nil {
-			log.Println(err)
-			break
+			return 0, err
 		}
 		switch w {
 		case AT_HWCAP2:
-			return v
+			return v, nil
 		}
 	}
-	return 0
 }
