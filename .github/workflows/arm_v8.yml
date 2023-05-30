@@ -41,7 +41,6 @@ jobs:
           # Set processor
           docker exec xgolang cp /go/bin/setprocessor /home/runner/go/bin/
           docker exec -w /go xgolang ./bin/setprocessor
-          docker exec -w /go xgolang ./bin/setprocessor | grep GOARCH | xargs -I {} go env -w {}
-          # TODO Example to unset GOARM which is empty
+          # TODO GOARM is empty and go env $(./bin/setprocessor) with fail
           # Results
           docker exec xgolang go env GOARCH GOARM
