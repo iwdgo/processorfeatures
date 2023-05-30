@@ -41,6 +41,8 @@ jobs:
           # Set processor
           docker exec xgolang cp /go/bin/setprocessor /home/runner/go/bin/
           docker exec -w /go xgolang ./bin/setprocessor
-          docker exec -w /go xgolang go env -w $(./bin/setprocessor)
+          docker exec -w /go xgolang echo $GOARCH $GOARM
+          docker exec xgolang go env -w $(echo $GOARCH)
+          docker exec xgolang if [ "$GOARM" == "" ]; then go env -u GOARM 
           # Results
           docker exec xgolang go env GOARCH GOARM
