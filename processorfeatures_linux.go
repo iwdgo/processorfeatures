@@ -5,6 +5,7 @@ package processorfeatures
 import (
 	"bytes"
 	"errors"
+	"io"
 	"log"
 	"os"
 )
@@ -166,7 +167,9 @@ func loadflags() error {
 	// TODO Check flags for each processor
 	flags, err := os.ReadFile("/proc/cpuinfo")
 	if err != nil {
-		return err
+		if err != io.EOF || flags == nil {
+			return err
+		}
 	}
 	b := false
 	_, flags, b = bytes.Cut(flags, []byte("flags\t\t:"))
