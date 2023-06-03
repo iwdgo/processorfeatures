@@ -1,4 +1,4 @@
-name: arm v7
+name: arm v5 v6 v7
 on:
   push:
     branches:
@@ -6,6 +6,11 @@ on:
 
 jobs:
   checkfeatures:
+    strategy:
+      matrix:
+        # Using QEMU names
+        arm_v: [ 5, 6, 7 ]
+      fail-fast: false
     runs-on: ubuntu-latest
     steps:
       - name: Check out code into the Go module directory
@@ -22,8 +27,9 @@ jobs:
           mkdir -p $(go env GOPATH)/bin
           echo $(go env GOPATH)/bin "is in" $PATH
           # load docker image with QEMU
-          docker run --rm --privileged tonistiigi/binfmt:latest --install arm
-          docker run -d -t --platform arm --name xgolang arm32v7/golang
+          go install github.com/iwdgo/gotip-build/architecture@master
+          export GOARM=${{ matrix.arm_v }}
+          architecture
           docker exec -w /tmp xgolang mkdir -p $(go env GOCACHE)
           docker exec -w /tmp xgolang mkdir -p $(go env GOMODCACHE)
           docker exec -w /tmp xgolang mkdir -p $(dirname $(go env GOENV))
