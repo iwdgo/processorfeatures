@@ -26,6 +26,8 @@ func main() {
 			return
 		}
 		fmt.Printf("GOARCH=arm GOARM=%s\n", v)
+	case "s390x", "risv64":
+		fmt.Println("")
 	default:
 		fmt.Println("not implemented")
 	}
