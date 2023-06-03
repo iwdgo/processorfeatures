@@ -213,8 +213,12 @@ func loadflags() error {
 		}
 		i++
 	}
-	hwcap2 := LoadHWCAP2()
+	hwcap2, err := LoadHWCAP2()
+	if err != nil && err != io.EOF {
+		return err
+	}
 	log.Printf("%x", hwcap2)
+	// TODO Add parsing of auxv features
 	return nil
 }
 
