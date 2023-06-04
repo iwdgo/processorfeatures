@@ -119,7 +119,11 @@ func main() {
 		}
 		selected[elfarch] = structlines
 		log.Printf("%s (%s): %d records parsed to %d", goarch, elfarch, len(selected[elfarch]), len(structlines))
-		_, _ = fmt.Fprintf(w, "//go:build %s\n", goarch)
+		buildtag := goarch
+		if goarch == "ppc64" {
+			buildtag = "ppc64 || ppc64le"
+		}
+		_, _ = fmt.Fprintf(w, "//go:build %s\n", buildtag)
 		_, _ = fmt.Fprintln(w, "// Code generated using 'go generate'; DO NOT EDIT.")
 		_, _ = fmt.Fprintln(w, "// hwcap2flags files contain the HWCAP flags for each architecture")
 		_, _ = fmt.Fprintln(w, "//go:generate go run mkhwcap2flags.go")
