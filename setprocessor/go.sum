@@ -1,2 +1,4 @@
 github.com/iwdgo/processorfeatures v0.0.0-20230514162733-0aca00323e30 h1:I5y3++Ma4N4Bk2LIlPHhdoJXNm/wuJWytZMp4HINukI=
 github.com/iwdgo/processorfeatures v0.0.0-20230514162733-0aca00323e30/go.mod h1:7KLUuJ0kuVg6m7tIcQHSxD3dABQMXBJmHo/5CCIi3S8=
+github.com/iwdgo/processorfeatures v0.0.0-20230604093912-b38f1e49d1f3 h1:J1GgHKsvHXvtCpLNL4DMOJISUAHfILdm1z27D3AuyKQ=
+github.com/iwdgo/processorfeatures v0.0.0-20230604093912-b38f1e49d1f3/go.mod h1:7KLUuJ0kuVg6m7tIcQHSxD3dABQMXBJmHo/5CCIi3S8=
