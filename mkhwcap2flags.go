@@ -1,6 +1,7 @@
 //go:build ignore
 
 // Generate hwcap2flags_*.go files using last copy of elf.h_include
+// copied from https://git.musl-libc.org/cgit/musl/tree/include/elf.h
 package main
 
 import (
@@ -14,55 +15,23 @@ import (
 	"strings"
 )
 
-// Reads https://git.musl-libc.org/cgit/musl/tree/include/elf.h
-func featuresToFile(f *bytes.Buffer, prefix string, rawFeatures string) *bytes.Buffer {
-	replacer := strings.NewReplacer("\t", " ", "\n", "")
-	out := replacer.Replace(rawFeatures)
-	features := strings.Split(out, "#define ")
-	for i, s := range features {
-		if s == "" {
-			continue
-		}
-		index := strings.Index(s, " ")
-		if index == -1 {
-			log.Printf("%s (%d) has no blank space", s, i)
-			continue
-		}
-		if index <= len(prefix) {
-			log.Printf("blank space at %d is before prefix %s (%s)", index, prefix, s)
-			continue
-		}
-		r := s[len(prefix):index]
-		v := s[strings.LastIndex(s, " ")+1:]
-		n, err := strconv.ParseInt(v, 10, 64)
-		if err != nil {
-			// Although it is not generated, IA64 has hex values: 0x...
-			n, err = strconv.ParseInt(v[2:], 16, 64)
-			if err != nil {
-				// TODO PPC64 re-uses PPC values
-				log.Printf("%s (%s): %v", v, s, err)
-				continue
-			}
-		}
-		_, err = fmt.Fprintln(f, fmt.Sprintf(`{%v, "", "%s", "%s"},`, n, strings.ToLower(r), s))
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-	return f
-}
-
 func main() {
-	f, err := os.Open("elf.h_include")
+	filename := "elf.h_include"
+	f, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer f.Close()
 	buf, err := io.ReadAll(f)
 	if err != nil {
 		log.Fatal(err)
 	}
+	if len(buf) == 0 {
+		log.Printf("%s is empty", filename)
+		return
+	}
 	records := bytes.Split(buf, []byte("\n"))
-	// Build list of prefix
+	// Build list of elf architectures
 	var arches [][]byte
 	archset := make(map[string]int) // R_*_NONE index
 	none := []byte("_NONE")
@@ -79,19 +48,24 @@ func main() {
 			}
 		}
 	}
+	if len(arches) == 0 {
+		log.Println("no architecture found")
+		return
+	}
 	log.Printf("%s", arches)
+	selected := make(map[string][]string, len(arches))
 	for _, prefix := range arches {
-		selected := make([]string, 512)
-		for _, r := range records[archset[string(prefix)]:] {
+		elfarch := string(prefix)
+		for _, r := range records[archset[elfarch]:] {
 			if bytes.Contains(r, prefix) {
-				selected = append(selected, string(r))
+				selected[elfarch] = append(selected[elfarch], string(r))
 				continue
 			}
 			break // Values are contiguous
 		}
-		arch := strings.ToLower(string(prefix))
+		arch := strings.ToLower(elfarch)
 		w := new(bytes.Buffer)
-		// Some elf arches are names differently in Go
+		// An architecture name can differ between elf and Go.
 		goarch := arch
 		switch goarch {
 		case "390":
@@ -103,18 +77,56 @@ func main() {
 		case "386", "arm", "ppc", "ppc64", "riscv", "sparc":
 			// Known architectures
 		default:
-			fmt.Printf("Architecture %s is not supported in Go. Skipping %d definitions.\n", goarch, len(selected))
+			log.Printf("%s is not supported in Go. Skipping %d definitions.\n", elfarch, len(selected[elfarch]))
 			continue
 		}
-		log.Printf("parsing %d records for prefix %s (%s)", len(selected), string(prefix), goarch)
+		var structlines []string
+		replacer := strings.NewReplacer("#define ", "", "\t", " ", "\n", "", fmt.Sprintf("R_%s_", elfarch), "")
+		for i, s := range selected[elfarch] {
+			s = replacer.Replace(s)
+			s = strings.TrimSpace(s)
+			if s == "" {
+				continue
+			}
+			r := s[:strings.Index(s, " ")]
+			v := s[strings.LastIndex(s, " ")+1:]
+			n, err := strconv.ParseInt(v, 10, 64)
+			if err != nil {
+				// Although it is not generated, IA64 has hex values: 0x...
+				n, err = strconv.ParseInt(v[2:], 16, 64)
+				if err != nil {
+					for _, a := range arches {
+						if strings.Contains(v, string(a)) {
+							// Reference is currently the same index of record
+							if strings.Contains(selected[string(a)][i], r) {
+								v = selected[string(a)][i]
+								v = v[1:] // Remove {
+								v, _, b := strings.Cut(v, ",")
+								if b {
+									n, err = strconv.ParseInt(v, 10, 64)
+								}
+								break
+							}
+						}
+					}
+				}
+				if err != nil {
+					log.Printf("%s (%s): %v", v, s, err)
+					continue
+				}
+			}
+			structlines = append(structlines, fmt.Sprintf(`{%v, "", "%s", "%s"},`, n, strings.ToLower(r), s))
+		}
+		selected[elfarch] = structlines
+		log.Printf("%s (%s): %d records parsed to %d", goarch, elfarch, len(selected[elfarch]), len(structlines))
 		_, _ = fmt.Fprintf(w, "//go:build %s\n", goarch)
-		_, _ = fmt.Fprintf(w, "// Code generated using 'go generate'; DO NOT EDIT.\n")
-		_, _ = fmt.Fprintln(w, "// package buildref contains the the HWCAP flags for each architecture")
+		_, _ = fmt.Fprintln(w, "// Code generated using 'go generate'; DO NOT EDIT.")
+		_, _ = fmt.Fprintln(w, "// hwcap2flags files contain the HWCAP flags for each architecture")
 		_, _ = fmt.Fprintln(w, "//go:generate go run mkhwcap2flags.go")
 		_, _ = fmt.Fprintln(w, "package processorfeatures")
-		_, _ = fmt.Fprintf(w, "var AuxvFeatures = []ProcessorFeature{\n")
-		w = featuresToFile(w, string(prefix), strings.Join(selected, "\n"))
-		_, _ = fmt.Fprintf(w, "}")
+		_, _ = fmt.Fprintln(w, "var AuxvFeatures = []ProcessorFeature{")
+		_, _ = fmt.Fprintln(w, strings.Join(structlines, "\n"))
+		_, _ = fmt.Fprintln(w, "}")
 
 		// gofmt result
 		b := w.Bytes()
