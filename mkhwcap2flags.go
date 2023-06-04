@@ -15,6 +15,30 @@ import (
 	"strings"
 )
 
+func addFile(goarch string, structlines []string) {
+	w := new(bytes.Buffer)
+	_, _ = fmt.Fprintf(w, "//go:build %s\n", goarch)
+	_, _ = fmt.Fprintln(w, "// Code generated using 'go generate'; DO NOT EDIT.")
+	_, _ = fmt.Fprintln(w, "// hwcap2flags files contain the HWCAP flags for each architecture")
+	_, _ = fmt.Fprintln(w, "//go:generate go run mkhwcap2flags.go")
+	_, _ = fmt.Fprintln(w, "package processorfeatures")
+	_, _ = fmt.Fprintln(w, "var AuxvFeatures = []ProcessorFeature{")
+	_, _ = fmt.Fprintln(w, strings.Join(structlines, "\n"))
+	_, _ = fmt.Fprintln(w, "}")
+
+	// gofmt result
+	b := w.Bytes()
+	b, err := format.Source(b)
+	if err != nil {
+		panic(err)
+	}
+
+	if err := os.WriteFile(fmt.Sprintf("hwcap2flags_%s.go", goarch), b, 0666); err != nil {
+		log.Fatalf("can't write output: %v\n", err)
+	}
+
+}
+
 func main() {
 	filename := "elf.h_include"
 	f, err := os.Open(filename)
@@ -64,7 +88,6 @@ func main() {
 			break // Values are contiguous
 		}
 		arch := strings.ToLower(elfarch)
-		w := new(bytes.Buffer)
 		// An architecture name can differ between elf and Go.
 		goarch := arch
 		switch goarch {
@@ -119,28 +142,9 @@ func main() {
 		}
 		selected[elfarch] = structlines
 		log.Printf("%s (%s): %d records parsed to %d", goarch, elfarch, len(selected[elfarch]), len(structlines))
-		buildtag := goarch
+		addFile(goarch, structlines)
 		if goarch == "ppc64" {
-			buildtag = "ppc64 || ppc64le"
-		}
-		_, _ = fmt.Fprintf(w, "//go:build %s\n", buildtag)
-		_, _ = fmt.Fprintln(w, "// Code generated using 'go generate'; DO NOT EDIT.")
-		_, _ = fmt.Fprintln(w, "// hwcap2flags files contain the HWCAP flags for each architecture")
-		_, _ = fmt.Fprintln(w, "//go:generate go run mkhwcap2flags.go")
-		_, _ = fmt.Fprintln(w, "package processorfeatures")
-		_, _ = fmt.Fprintln(w, "var AuxvFeatures = []ProcessorFeature{")
-		_, _ = fmt.Fprintln(w, strings.Join(structlines, "\n"))
-		_, _ = fmt.Fprintln(w, "}")
-
-		// gofmt result
-		b := w.Bytes()
-		b, err = format.Source(b)
-		if err != nil {
-			panic(err)
-		}
-
-		if err := os.WriteFile(fmt.Sprintf("hwcap2flags_%s.go", goarch), b, 0666); err != nil {
-			log.Fatalf("can't write output: %v\n", err)
+			addFile("ppc64le", structlines)
 		}
 	}
 }
