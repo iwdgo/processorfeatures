@@ -27,7 +27,7 @@ jobs:
           mkdir -p $(go env GOPATH)/bin
           echo $(go env GOPATH)/bin "is in" $PATH
           # load docker image with QEMU
-          go install github.com/iwdgo/gotip-build/architecture@master
+          go install github.com/iwdgo/gotip-build/architecture@latest
           export GOARCH=arm
           export GOARM=${{ matrix.arm_v }}
           architecture
