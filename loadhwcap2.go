@@ -68,9 +68,7 @@ const (
 	AT_MINSIGSTKSZ = 51
 )
 
-// LoadHWCAP2 returns HWCAP2 as a uint64 by reading /proc/self/auxv.
-// An error is returned otherwise. If the error is io.EOF, HWCAP2 is not found.
-func LoadHWCAP2() (uint64, error) {
+func loadauxv(i uint64) (uint64, error) {
 	buf, err := os.ReadFile("/proc/self/auxv")
 	if err != nil {
 		return 0, err
@@ -88,8 +86,14 @@ func LoadHWCAP2() (uint64, error) {
 			return 0, err
 		}
 		switch w {
-		case AT_HWCAP2:
+		case i:
 			return v, nil
 		}
 	}
+}
+
+// LoadHWCAP2 returns HWCAP2 as a uint64 by reading /proc/self/auxv.
+// An error is returned otherwise. If the error is io.EOF, HWCAP2 is not found.
+func LoadHWCAP2() (uint64, error) {
+	return loadauxv(AT_HWCAP2)
 }
