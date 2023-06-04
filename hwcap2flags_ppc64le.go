@@ -1,4 +1,4 @@
-//go:build ppc64
+//go:build ppc64le
 
 // Code generated using 'go generate'; DO NOT EDIT.
 // hwcap2flags files contain the HWCAP flags for each architecture
