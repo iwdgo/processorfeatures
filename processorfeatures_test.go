@@ -18,7 +18,19 @@ func TestIsProcessorFeaturePresent_all(t *testing.T) {
 			c++
 		}
 	}
-	t.Logf("%v features of %v are available", c, len(ProcessorFeatures))
+	t.Logf("%v processor features of %v are available", c, len(ProcessorFeatures))
+	c = 0
+	for _, f := range MachineFeatures {
+		b, err := IsMachineFeaturePresent(f.I)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if b {
+			t.Logf("%s", f.S)
+			c++
+		}
+	}
+	t.Logf("%v machine features of %v are available", c, len(MachineFeatures))
 }
 
 func TestSetGOAMD64v(t *testing.T) {
