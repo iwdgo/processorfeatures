@@ -17,7 +17,7 @@ import (
 
 func addFile(goarch string, structlines []string) {
 	w := new(bytes.Buffer)
-	_, _ = fmt.Fprintf(w, "//go:build %s\n", goarch)
+	_, _ = fmt.Fprintf(w, "//go:build linux && %s\n", goarch)
 	_, _ = fmt.Fprintln(w, "// Code generated using 'go generate'; DO NOT EDIT.")
 	_, _ = fmt.Fprintln(w, "// hwcap2flags files contain the HWCAP flags for each architecture")
 	_, _ = fmt.Fprintln(w, "//go:generate go run mkhwcap2flags.go")
@@ -88,7 +88,7 @@ func main() {
 			break // Values are contiguous
 		}
 		arch := strings.ToLower(elfarch)
-		// An architecture name can differ between elf and Go.
+		// Map name of architecture from elf to Go.
 		goarch := arch
 		switch goarch {
 		case "390":
@@ -98,7 +98,7 @@ func main() {
 		case "x86_64":
 			goarch = "amd64"
 		case "386", "arm", "ppc", "ppc64", "riscv", "sparc":
-			// Known architectures
+			// Name is identical
 		default:
 			log.Printf("%s is not supported in Go. Skipping %d definitions.\n", elfarch, len(selected[elfarch]))
 			continue
