@@ -1,4 +1,4 @@
-//go:build arm
+//go:build linux && arm
 
 // Code generated using 'go generate'; DO NOT EDIT.
 // hwcap2flags files contain the HWCAP flags for each architecture
@@ -6,7 +6,7 @@
 //go:generate go run mkhwcap2flags.go
 package processorfeatures
 
-var AuxvFeatures = []ProcessorFeature{
+var MachineFeatures = []ProcessorFeature{
 	{0, "", "none", "NONE  0"},
 	{1, "", "pc24", "PC24  1"},
 	{2, "", "abs32", "ABS32  2"},

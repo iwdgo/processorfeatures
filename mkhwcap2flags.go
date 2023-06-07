@@ -22,7 +22,7 @@ func addFile(goarch string, structlines []string) {
 	_, _ = fmt.Fprintln(w, "// hwcap2flags files contain the HWCAP flags for each architecture")
 	_, _ = fmt.Fprintln(w, "//go:generate go run mkhwcap2flags.go")
 	_, _ = fmt.Fprintln(w, "package processorfeatures")
-	_, _ = fmt.Fprintln(w, "var AuxvFeatures = []ProcessorFeature{")
+	_, _ = fmt.Fprintln(w, "var MachineFeatures = []ProcessorFeature{")
 	_, _ = fmt.Fprintln(w, strings.Join(structlines, "\n"))
 	_, _ = fmt.Fprintln(w, "}")
 

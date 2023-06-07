@@ -1,4 +1,4 @@
-//go:build ppc64le
+//go:build linux && ppc64le
 
 // Code generated using 'go generate'; DO NOT EDIT.
 // hwcap2flags files contain the HWCAP flags for each architecture
@@ -6,7 +6,7 @@
 //go:generate go run mkhwcap2flags.go
 package processorfeatures
 
-var AuxvFeatures = []ProcessorFeature{
+var MachineFeatures = []ProcessorFeature{
 	{0, "", "none", "NONE  R_PPC_NONE"},
 	{1, "", "addr32", "ADDR32  R_PPC_ADDR32"},
 	{2, "", "addr24", "ADDR24  R_PPC_ADDR24"},
