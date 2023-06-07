@@ -56,7 +56,7 @@ var ProcessorFeatures = []ProcessorFeature{
 	{45, "arm64", "PF_ARM_V83_LRCPC_INSTRUCTIONS_AVAILABLE", "This Arm processor implements the Arm v8.3 LRCPC instructions (for example, LDAPR). Note that certain Arm v8.2 CPUs may optionally support the LRCPC instructions."},
 }
 
-func isProcessorFeaturesPresent(i uint32) (bool, error) {
+func isProcessorFeaturePresent(i uint32) (bool, error) {
 	d, e := syscall.LoadDLL("kernel32.dll")
 	if e != nil {
 		return false, e
@@ -68,3 +68,5 @@ func isProcessorFeaturesPresent(i uint32) (bool, error) {
 	r1, _, _ := syscall.SyscallN(p.Addr(), uintptr(i))
 	return r1 != 0, nil
 }
+
+func isMachineFeaturePresent(i uint32) (bool, error) { return false, nil }

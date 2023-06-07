@@ -225,7 +225,7 @@ func loadflags() error {
 	return nil
 }
 
-func isProcessorFeaturesPresent(i uint32) (bool, error) {
+func isProcessorFeaturePresent(i uint32) (bool, error) {
 	if !filled {
 		if err := loadflags(); err != nil {
 			return false, err
@@ -233,4 +233,14 @@ func isProcessorFeaturesPresent(i uint32) (bool, error) {
 		filled = true
 	}
 	return featuresstatus[i], nil
+}
+
+func isMachineFeaturePresent(i uint32) (bool, error) {
+	if !filled {
+		if err := loadflags(); err != nil {
+			return false, err
+		}
+		filled = true
+	}
+	return machinestatus[i], nil
 }

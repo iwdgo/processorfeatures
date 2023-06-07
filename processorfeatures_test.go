@@ -6,10 +6,10 @@ import (
 	"testing"
 )
 
-func TestIsProcessorFeaturesPresent_all(t *testing.T) {
+func TestIsProcessorFeaturePresent_all(t *testing.T) {
 	c := 0
 	for _, f := range ProcessorFeatures {
-		b, err := IsProcessorFeaturesPresent(f.I)
+		b, err := IsProcessorFeaturePresent(f.I)
 		if err != nil {
 			t.Fatal(err)
 		}
