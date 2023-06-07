@@ -5,6 +5,9 @@ package processorfeatures
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
+	"fmt"
+	"math/bits"
 	"os"
 )
 
@@ -93,7 +96,11 @@ func loadauxv(i uint64) (uint64, error) {
 }
 
 // LoadHWCAP2 returns HWCAP2 as a uint64 by reading /proc/self/auxv.
-// An error is returned otherwise. If the error is io.EOF, HWCAP2 is not found.
+// THe error is always returned. The caller can ignore the io.EOF when the value is not 0.
 func LoadHWCAP2() (uint64, error) {
-	return loadauxv(AT_HWCAP2)
+	v, err := loadauxv(AT_HWCAP2)
+	if bits.LeadingZeros64(v) < 32 {
+		return v, errors.New(fmt.Sprintf("unexpected bit in the high word: %v", v))
+	}
+	return v, err
 }
