@@ -159,7 +159,7 @@ var ProcessorFeatures = []ProcessorFeature{
 var (
 	filled         = false
 	featuresstatus = make([]bool, len(ProcessorFeatures))
-	auxvstatus     = make([]bool, len(AuxvFeatures))
+	machinestatus  = make([]bool, len(MachineFeatures))
 )
 
 // loadflags loads processor flags as returned by a command like `cat proc/cpuinfo`
@@ -217,11 +217,13 @@ func loadflags() error {
 		i++
 	}
 	hwcap2, err := LoadHWCAP2()
-	if err != nil && err != io.EOF {
+	if err != nil {
 		return err
 	}
-	log.Printf("%x", hwcap2)
-	// TODO Add parsing of auxv features
+	s32 := fmt.Sprintf("%032b", v)
+	for i, b := range s32 {
+		machinestatus[i] = string(b) == "0"
+	}
 	return nil
 }
 
