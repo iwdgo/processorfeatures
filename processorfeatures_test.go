@@ -20,8 +20,9 @@ func TestIsProcessorFeaturePresent_all(t *testing.T) {
 	}
 	t.Logf("%v processor features of %v are available", c, len(ProcessorFeatures))
 	c = 0
-	for _, f := range MachineFeatures {
-		b, err := IsMachineFeaturePresent(f.I)
+	for i, f := range MachineFeatures {
+		// On ARM, machine features do not have sequential number
+		b, err := IsMachineFeaturePresent(uint32(i))
 		if err != nil {
 			t.Fatal(err)
 		}
