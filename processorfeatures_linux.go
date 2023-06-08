@@ -5,6 +5,7 @@ package processorfeatures
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -216,7 +217,7 @@ func loadflags() error {
 		}
 		i++
 	}
-	hwcap2, err := LoadHWCAP2()
+	v, err := LoadHWCAP2()
 	if err != nil {
 		return err
 	}
