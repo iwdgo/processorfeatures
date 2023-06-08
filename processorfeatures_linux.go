@@ -221,10 +221,11 @@ func loadflags() error {
 	if err != nil {
 		return err
 	}
+	// HWCAP2 is documented as occupying the lower 32 bits
 	s32 := fmt.Sprintf("%032b", v)
 	log.Printf("%s", s32)
 	i = 0
-	for i < len(machinestatus) {
+	for i < len(machinestatus) && i < 32 {
 		machinestatus[i] = string(s32[i]) == "0"
 		i++
 	}
