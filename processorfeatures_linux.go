@@ -218,12 +218,15 @@ func loadflags() error {
 		i++
 	}
 	v, err := LoadHWCAP2()
-	if err != nil {
-		return err
-	}
-	// HWCAP2 is documented as occupying the lower 32 bits
 	s32 := fmt.Sprintf("%032b", v)
 	log.Printf("%s", s32)
+	if err != nil {
+		log.Printf("%v\nerror reading HWCAP2 is ignored when loading flags.", err)
+		if err != io.EOF || v == 0 {
+			return nil
+		}
+	}
+	// HWCAP2 is documented as occupying the lower 32 bits
 	i = 0
 	for i < len(machinestatus) && i < 32 {
 		machinestatus[i] = string(s32[i]) == "0"
