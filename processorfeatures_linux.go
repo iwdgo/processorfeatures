@@ -222,8 +222,11 @@ func loadflags() error {
 		return err
 	}
 	s32 := fmt.Sprintf("%032b", v)
-	for i, b := range s32 {
-		machinestatus[i] = string(b) == "0"
+	log.Printf("%s", s32)
+	i = 0
+	for i < len(machinestatus) {
+		machinestatus[i] = string(s32[i]) == "0"
+		i++
 	}
 	return nil
 }
