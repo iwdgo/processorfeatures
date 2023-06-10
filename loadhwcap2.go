@@ -80,48 +80,44 @@ func loadauxv(at uint64) (uint64, error) {
 		return 0, err
 	}
 	reader := bytes.NewReader(buf)
-	// Endianness and 32/64: One byte is not zero in the first 32/64 bytes
-	LEndian = buf[0] != 0 // Any AT_ value is present. Null value ends the file.
-	Bits32 = buf[4] != 0  // Test expects that first AT_ value has no null value.
-	if Bits32 {
-		if LEndian {
-			var w, v uint32
-			for {
-				err = binary.Read(reader, binary.LittleEndian, &w)
-				if err != nil {
-					return 0, err
-				}
-				err = binary.Read(reader, binary.LittleEndian, &v)
-				if err != nil {
-					return 0, err
-				}
-				switch w {
-				case uint32(at):
-					return uint64(v), nil
-				}
+	var e [8]byte
+	err = binary.Read(reader, binary.LittleEndian, &e)
+	if err != nil {
+		return 0, err
+	}
+	for i := 0; i < len(e); i++ {
+		err = reader.UnreadByte()
+		if err != nil {
+			return 0, err
+		}
+	}
+	// Endianness and 32/64: One byte is not zero in the first 32/64 bites
+	LEndian = e[0] != 0
+	Bits32 = e[4] != 0
+	if Bits32 && LEndian {
+		var w, v uint32
+		for {
+			err = binary.Read(reader, binary.LittleEndian, &w)
+			if err != nil {
+				return 0, err
 			}
-		} else {
-			var w, v uint32
-			for {
-				err = binary.Read(reader, binary.BigEndian, &w)
-				if err != nil {
-					return 0, err
-				}
-				err = binary.Read(reader, binary.BigEndian, &v)
-				if err != nil {
-					return 0, err
-				}
-				switch w {
-				case uint32(at):
-					return uint64(v), nil
-				}
+			err = binary.Read(reader, binary.LittleEndian, &v)
+			if err != nil {
+				return 0, err
+			}
+			switch w {
+			case uint32(at):
+				return uint64(v), nil
 			}
 		}
+	}
+	if Bits32 && !LEndian {
+		return 0, errors.New("big endian 32 bits is not implemented")
 	}
 	if LEndian {
 		return lookupAT(reader, at, binary.LittleEndian)
 	}
-	return lookupAT(reader, at, binary.BigEndian)
+	return lookupAT(reader, at, binary.LittleEndian)
 }
 
 // LoadHWCAP2 returns HWCAP2 as a uint64 by reading /proc/self/auxv.
@@ -137,11 +133,11 @@ func LoadHWCAP2() (uint32, error) {
 func lookupAT(r *bytes.Reader, at uint64, order binary.ByteOrder) (value uint64, err error) {
 	var w, v uint64
 	for {
-		err = binary.Read(r, binary.BigEndian, &w)
+		err = binary.Read(r, order, &w)
 		if err != nil {
 			return 0, err
 		}
-		err = binary.Read(r, binary.BigEndian, &v)
+		err = binary.Read(r, order, &v)
 		if err != nil {
 			return 0, err
 		}
