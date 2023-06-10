@@ -218,19 +218,26 @@ func loadflags() error {
 		i++
 	}
 	v, err := LoadHWCAP2()
-	s32 := fmt.Sprintf("%032b", v)
-	log.Printf("%s", s32)
+	s := fmt.Sprintf("%032b", v)
+	log.Printf("%s", s)
 	if err != nil {
-		log.Printf("%v\nerror reading HWCAP2 is ignored when loading flags.", err)
-		if err != io.EOF || v == 0 {
+		if err == io.EOF || v == 0 {
+			log.Printf("HWCAP2 is not returned on some architectures")
 			return nil
 		}
+		log.Printf("%v\nerror reading HWCAP2 is ignored when loading flags.", err)
+		return err
 	}
 	// HWCAP2 is documented as occupying the lower 32 bits
 	i = 0
+	// TODO Interpret correctly ARM flags
 	for i < len(machinestatus) && i < 32 {
-		machinestatus[i] = string(s32[i]) == "0"
+		machinestatus[i] = string(s[i]) == "0"
 		i++
+	}
+	if i == 32 {
+		// Any zero above is a lost feature
+		log.Printf("Used %s, Ignored %s", s[0:i], s[i:])
 	}
 	return nil
 }

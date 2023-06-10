@@ -71,36 +71,83 @@ const (
 	AT_MINSIGSTKSZ = 51
 )
 
-func loadauxv(i uint64) (uint64, error) {
+var LEndian bool // true when little (low) endian architecture
+var Bits32 bool  // true when 32 bits architecture
+
+func loadauxv(at uint64) (uint64, error) {
 	buf, err := os.ReadFile("/proc/self/auxv")
 	if err != nil {
 		return 0, err
 	}
-	var w, v uint64
 	reader := bytes.NewReader(buf)
-	// TODO Handle endianness
-	for {
-		err = binary.Read(reader, binary.LittleEndian, &w)
-		if err != nil {
-			return 0, err
-		}
-		err = binary.Read(reader, binary.LittleEndian, &v)
-		if err != nil {
-			return 0, err
-		}
-		switch w {
-		case i:
-			return v, nil
+	// Endianness and 32/64: One byte is not zero in the first 32/64 bytes
+	LEndian = buf[0] != 0 // Any AT_ value is present. Null value ends the file.
+	Bits32 = buf[4] != 0  // Test expects that first AT_ value has no null value.
+	if Bits32 {
+		if LEndian {
+			var w, v uint32
+			for {
+				err = binary.Read(reader, binary.LittleEndian, &w)
+				if err != nil {
+					return 0, err
+				}
+				err = binary.Read(reader, binary.LittleEndian, &v)
+				if err != nil {
+					return 0, err
+				}
+				switch w {
+				case uint32(at):
+					return uint64(v), nil
+				}
+			}
+		} else {
+			var w, v uint32
+			for {
+				err = binary.Read(reader, binary.BigEndian, &w)
+				if err != nil {
+					return 0, err
+				}
+				err = binary.Read(reader, binary.BigEndian, &v)
+				if err != nil {
+					return 0, err
+				}
+				switch w {
+				case uint32(at):
+					return uint64(v), nil
+				}
+			}
 		}
 	}
+	if LEndian {
+		return lookupAT(reader, at, binary.LittleEndian)
+	}
+	return lookupAT(reader, at, binary.BigEndian)
 }
 
 // LoadHWCAP2 returns HWCAP2 as a uint64 by reading /proc/self/auxv.
 // THe error is always returned. The caller can ignore the io.EOF when the value is not 0.
-func LoadHWCAP2() (uint64, error) {
+func LoadHWCAP2() (uint32, error) {
 	v, err := loadauxv(AT_HWCAP2)
 	if bits.LeadingZeros64(v) < 32 {
-		return v, errors.New(fmt.Sprintf("unexpected bit in the high word: %v", v))
+		return uint32(v), errors.New(fmt.Sprintf("unexpected bit in the high word"))
 	}
-	return v, err
+	return uint32(v), err
+}
+
+func lookupAT(r *bytes.Reader, at uint64, order binary.ByteOrder) (value uint64, err error) {
+	var w, v uint64
+	for {
+		err = binary.Read(r, binary.BigEndian, &w)
+		if err != nil {
+			return 0, err
+		}
+		err = binary.Read(r, binary.BigEndian, &v)
+		if err != nil {
+			return 0, err
+		}
+		switch w {
+		case at:
+			return v, nil
+		}
+	}
 }

@@ -52,10 +52,27 @@ func IsVersionComplete(v string) (missing []uint32) {
 	return missing
 }
 
+// IsMachineComplete verifies all machine features listed for version v
+func IsMachineComplete(v string) (missing []uint32) {
+	for _, f := range MachineFeatures {
+		if f.V == v {
+			if b, err := IsMachineFeaturePresent(f.I); err == nil {
+				if !b {
+					missing = append(missing, f.I)
+				}
+			} else {
+				missing = append(missing, f.I)
+			}
+		}
+	}
+	return missing
+}
+
 // SetGOARMv sets GOARM and GOARCH and returns arm64, 7 or 6 depending on identified processor features.
 func SetGOARMv() (v string, err error) {
 	v = "arm64"
-	if m := IsVersionComplete(v); len(m) == 0 {
+	// TODO Add check on abs64 as all ARM under docker have the same implementation
+	if m := IsVersionComplete(v); len(m) == 0 && !Bits32 {
 		err = os.Unsetenv("GOARM")
 		if err != nil {
 			return
@@ -66,6 +83,7 @@ func SetGOARMv() (v string, err error) {
 		}
 		return
 	}
+	// TODO Differentiate using machines
 	err = os.Setenv("GOARCH", "arm")
 	if err != nil {
 		return
@@ -78,8 +96,15 @@ func SetGOARMv() (v string, err error) {
 		}
 		return
 	}
-	// TODO Check that 6 is set for all or return 5
-	v = "6" // Default
+	v = "6"
+	if m := IsVersionComplete(v); len(m) == 0 {
+		err = os.Setenv("GOARM", v)
+		if err != nil {
+			return
+		}
+		return
+	}
+	v = "5" // Default
 	err = os.Setenv("GOARM", v)
 	if err != nil {
 		return
