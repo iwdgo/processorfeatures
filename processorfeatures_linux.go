@@ -259,5 +259,9 @@ func isMachineFeaturePresent(i uint32) (bool, error) {
 		}
 		filled = true
 	}
+	// TODO Do not use index to check presence
+	if int(i) >= len(machinestatus) {
+		return false, errors.New(fmt.Sprintf("feature %v requested when %d are defined", i, len(machinestatus)))
+	}
 	return machinestatus[i], nil
 }
