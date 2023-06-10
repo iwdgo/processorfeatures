@@ -17,19 +17,20 @@ The intent is to ease the detection of processor characteristics and the set of 
 
 Pseudo-file `/proc/cpuinfo` is parsed to load processor flags.
 Reported flags are used to determine version of processor.
+Pseudo-file is `/proc/self/auxv` is parsed to load machine features.
 
 ## Windows
 
 Win32 API call [`IsProcessorFeaturePresent`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocessorfeaturepresent) is used to collect the features of the processor.
 
-### AMD64
+### amd64
 
 Several checks are available but not every instruction of each version.
 Impact should be limited as the standard expects instructions to all be present for each version.
 Level is set when all verifiable features are present.
 Details are available in the structure `ProcessorFeatures`.
 
-### ARM 
+### arm 
 
 The availability of VFP defines level 6 or higher for GOARM.
 If v8 instruction set is available, GOARM is unset and GOARCH is set to ARM64. 
@@ -41,10 +42,11 @@ If v8 instruction set is available, GOARM is unset and GOARCH is set to ARM64.
 [Microarchitecture_levels](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels)
 Default for Go on amd64 is [v1](https://github.com/golang/go/issues/50589).
 
-### ARM
+### arm
 
-https://stackoverflow.com/questions/19844575/how-to-do-division-in-arm
+[ARM Developer handbook]https://developer.arm.com/documentation/ddi0602/2023-03/?lang=en
 
 ### Version history
 
-API is in development. ARM is under development.
+API is evolving.
+arm machine features are not used for now.
