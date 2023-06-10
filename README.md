@@ -3,9 +3,9 @@
 [![codecov](https://codecov.io/gh/iwdgo/processorfeatures/branch/master/graph/badge.svg)](https://codecov.io/gh/iwdgo/processorfeatures)
 
 [![amd64](https://github.com/iwdgo/processorfeatures/actions/workflows/amd64.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/amd64.yml)
-[![arm v8](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v8.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v8.yml)
-[![arm v7](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v7.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v7.yml)
-[![arm v6](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v6.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v6.yml)
+[![arm v](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/arm_v.yml)
+[![linux](https://github.com/iwdgo/processorfeatures/actions/workflows/linux.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/linux.yml)
+[![windows](https://github.com/iwdgo/processorfeatures/actions/workflows/amd64-windows.yml/badge.svg)](https://github.com/iwdgo/processorfeatures/actions/workflows/amd64-windows.yml)
 
 # Processor characteristics 
 
