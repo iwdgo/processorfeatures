@@ -79,40 +79,19 @@ func loadauxv(at uint64) (uint64, error) {
 	if err != nil {
 		return 0, err
 	}
-	reader := bytes.NewReader(buf)
-	var e [8]byte
-	err = binary.Read(reader, binary.LittleEndian, &e)
-	if err != nil {
-		return 0, err
-	}
-	for i := 0; i < len(e); i++ {
-		err = reader.UnreadByte()
-		if err != nil {
-			return 0, err
-		}
-	}
 	// Endianness and 32/64: One byte is not zero in the first 32/64 bites
-	LEndian = e[0] != 0
-	Bits32 = e[4] != 0
-	if Bits32 && LEndian {
-		var w, v uint32
-		for {
-			err = binary.Read(reader, binary.LittleEndian, &w)
-			if err != nil {
-				return 0, err
-			}
-			err = binary.Read(reader, binary.LittleEndian, &v)
-			if err != nil {
-				return 0, err
-			}
-			switch w {
-			case uint32(at):
-				return uint64(v), nil
-			}
-		}
+	LEndian = buf[0] != 0 // First byte contains a AT_ value
+	if LEndian {
+		Bits32 = buf[4] != 0 // Value for first AT_ is found
+	} else {
+		Bits32 = buf[3] != 0 // Key for first AT_ is found
 	}
-	if Bits32 && !LEndian {
-		return 0, errors.New("big endian 32 bits is not implemented")
+	reader := bytes.NewReader(buf)
+	if Bits32 {
+		if LEndian {
+			return lookupAT(reader, uint32(at), binary.LittleEndian)
+		}
+		return lookupAT(reader, uint32(at), binary.LittleEndian)
 	}
 	if LEndian {
 		return lookupAT(reader, at, binary.LittleEndian)
@@ -130,8 +109,8 @@ func LoadHWCAP2() (uint32, error) {
 	return uint32(v), err
 }
 
-func lookupAT(r *bytes.Reader, at uint64, order binary.ByteOrder) (value uint64, err error) {
-	var w, v uint64
+func lookupAT[V uint64 | uint32](r *bytes.Reader, at V, order binary.ByteOrder) (value uint64, err error) {
+	var w, v V
 	for {
 		err = binary.Read(r, order, &w)
 		if err != nil {
@@ -143,7 +122,7 @@ func lookupAT(r *bytes.Reader, at uint64, order binary.ByteOrder) (value uint64,
 		}
 		switch w {
 		case at:
-			return v, nil
+			return uint64(v), nil
 		}
 	}
 }
