@@ -6,6 +6,9 @@ import (
 	"syscall"
 )
 
+var LEndian = true
+var Bits32 = false
+
 var ProcessorFeatures = []ProcessorFeature{
 	{25, "7", "PF_ARM_64BIT_LOADSTORE_ATOMIC", "The 64-bit load/store atomic instructions are available."},
 	{24, "7", "PF_ARM_DIVIDE_INSTRUCTION_AVAILABLE", "The divide instructions are available."},
