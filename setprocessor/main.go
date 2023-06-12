@@ -26,9 +26,9 @@ func main() {
 			return
 		}
 		fmt.Printf("GOARCH=arm GOARM=%s\n", v)
-	case "s390x", "risv64":
-		fmt.Println("")
-	default:
+	case "386", "mips", "mips64", "mips64le", "ppc64", "ppc64le":
 		fmt.Println("not implemented")
+	default:
+		fmt.Println("")
 	}
 }
