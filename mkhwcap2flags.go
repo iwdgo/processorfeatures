@@ -101,7 +101,7 @@ func main() {
 			goarch = "arm64"
 		case "x86_64":
 			goarch = "amd64"
-		case "386", "arm", "ppc", "ppc64", "riscv", "sparc":
+		case "386", "arm", "mips", "ppc", "ppc64", "riscv", "sparc":
 			// Name is identical
 		default:
 			log.Printf("%s is not supported in Go. Skipping %d definitions.\n", elfarch, len(selected[elfarch]))
