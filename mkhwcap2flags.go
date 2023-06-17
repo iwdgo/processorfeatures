@@ -161,8 +161,11 @@ func main() {
 		selected[elfarch] = structlines
 		log.Printf("%s (%s): %d records parsed to %d", goarch, elfarch, len(selected[elfarch]), len(structlines))
 		addFile(goarch, structlines)
-		if goarch == "ppc64" {
+		switch goarch {
+		case "ppc64":
 			addFile("ppc64le", structlines)
+		case "mips":
+			addFile("mips64le", structlines)
 		}
 	}
 }
