@@ -127,17 +127,26 @@ func main() {
 				// Although it is not generated, IA64 has hex values: 0x...
 				n, err = strconv.ParseInt(v[2:], 16, 64)
 				if err != nil {
+					// v is a reference to a previously parsed entry
 					for _, a := range arches {
-						if strings.Contains(v, string(a)) {
-							// Reference is currently the same index of record
-							if strings.Contains(selected[string(a)][i], r) {
-								v = selected[string(a)][i]
-								v = v[1:] // Remove {
-								v, _, b := strings.Cut(v, ",")
-								if b {
-									n, err = strconv.ParseInt(v, 10, 64)
+						refarch := string(a)
+						if strings.Contains(v, refarch) {
+							j := i
+							for j < len(selected[refarch]) {
+								if strings.Contains(selected[refarch][j], r) {
+									v = selected[refarch][i]
+									v = v[1:] // Remove {
+									v, _, b := strings.Cut(v, ",")
+									if b {
+										n, err = strconv.ParseInt(v, 10, 64)
+									}
+									break
 								}
-								break
+								j++
+							}
+							if j < 0 {
+								log.Printf("%s (%s): not found", v, s)
+								continue
 							}
 						}
 					}
