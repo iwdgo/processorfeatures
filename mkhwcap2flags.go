@@ -108,8 +108,13 @@ func main() {
 			continue
 		}
 		var structlines []string
-		replacer := strings.NewReplacer("#define ", "", "\t", " ", "\n", "", fmt.Sprintf("R_%s_", elfarch), "")
+		pattern := fmt.Sprintf("#define R_%s_", elfarch)
+		replacer := strings.NewReplacer("\t", " ", "\n", "", pattern, "")
 		for i, s := range selected[elfarch] {
+			// TODO Cope with complex lines
+			if !strings.Contains(s, pattern) {
+				continue
+			}
 			s = replacer.Replace(s)
 			s = strings.TrimSpace(s)
 			if s == "" {
