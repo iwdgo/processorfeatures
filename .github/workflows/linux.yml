@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         # Using QEMU names
-        go_arch: [ arm64, s390x, ppc64le, 386 ]
+        go_arch: [ arm64, mips64le, ppc64le, s390x, 386 ]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
