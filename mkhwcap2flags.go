@@ -57,19 +57,18 @@ func main() {
 	records := bytes.Split(buf, []byte("\n"))
 	// Build list of elf architectures
 	var arches [][]byte
-	archset := make(map[string]int) // R_*_NONE index
+	regex := regexp.MustCompile("#define R_.*_NONE")
+	archset := make(map[string]int)
 	none := []byte("_NONE")
 	for i, r := range records {
+		if !regex.Match(r) {
+			continue
+		}
 		before, _, b1 := bytes.Cut(r, none)
 		if b1 {
-			_, after, b2 := bytes.Cut(before, []byte(" R_"))
-			if len(bytes.TrimSpace(after)) == 0 {
-				continue
-			}
-			if b2 {
-				arches = append(arches, after)
-				archset[string(after)] = i
-			}
+			a := bytes.Replace(before, []byte("#define R_"), []byte{}, 1)
+			arches = append(arches, a)
+			archset[string(a)] = i
 		}
 	}
 	if len(arches) == 0 {
