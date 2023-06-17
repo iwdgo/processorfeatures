@@ -76,15 +76,19 @@ func main() {
 		return
 	}
 	log.Printf("%s", arches)
+	// Lines of each architecture
 	selected := make(map[string][]string, len(arches))
 	for _, prefix := range arches {
 		elfarch := string(prefix)
 		for _, r := range records[archset[elfarch]:] {
+			if len(r) == 0 {
+				continue
+			}
 			if bytes.Contains(r, prefix) {
 				selected[elfarch] = append(selected[elfarch], string(r))
 				continue
 			}
-			break // Values are contiguous
+			break // Values are contiguous except blank lines
 		}
 		arch := strings.ToLower(elfarch)
 		// Map name of architecture from elf to Go.
