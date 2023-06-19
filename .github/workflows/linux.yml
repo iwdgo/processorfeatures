@@ -1,4 +1,4 @@
-name: linux
+name: 386 debug
 on: [push]
 
 jobs:
@@ -32,6 +32,7 @@ jobs:
           docker exec -w /tmp xgolang mkdir -p $(dirname $(go env GOENV))
           docker exec -w /tmp xgolang mkdir -p $(go env GOPATH)/bin
           docker exec -w /tmp xgolang echo $PATH
+          docker exec xgolang export GO386=387
           docker exec xgolang go version
           # docker exec xgolang go env
           # docker exec xgolang go install github.com/iwdgo/processorfeatures/setprocessor@latest
