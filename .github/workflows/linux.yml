@@ -24,7 +24,9 @@ jobs:
           mkdir -p $(go env GOPATH)/bin
           echo $(go env GOPATH)/bin "is in" $PATH
           # load docker image with QEMU
-          go install github.com/iwdgo/gotip-build/architecture@latest
+          # go install github.com/iwdgo/gotip-build/architecture@latest
+          docker run --rm --privileged tonistiigi/binfmt:latest --install 386
+          docker run -d -t --platform 386 -e GO386=387 -e GO_TEST_TIMEOUT_SCALE=4 -e GOPROXY=https://proxy.golang.org,direct -e GOSUMDB=sum.golang.org -e GOTOOLCHAIN=auto --name xgolang i386/golang
           export GOARCH=${{ matrix.go_arch }}
           architecture
           docker exec -w /tmp xgolang mkdir -p $(go env GOCACHE)
@@ -32,8 +34,6 @@ jobs:
           docker exec -w /tmp xgolang mkdir -p $(dirname $(go env GOENV))
           docker exec -w /tmp xgolang mkdir -p $(go env GOPATH)/bin
           docker exec -w /tmp xgolang echo $PATH
-          docker run --rm --privileged tonistiigi/binfmt:latest --install 386
-          docker run -d -t --platform 386 -e GO386=387 -e GO_TEST_TIMEOUT_SCALE=4 -e GOPROXY=https://proxy.golang.org,direct -e GOSUMDB=sum.golang.org -e GOTOOLCHAIN=auto --name xgolang i386/golang
           docker exec xgolang go version
           # docker exec xgolang go env
           # docker exec xgolang go install github.com/iwdgo/processorfeatures/setprocessor@latest
