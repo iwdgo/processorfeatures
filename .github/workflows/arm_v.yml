@@ -1,8 +1,5 @@
 name: arm v5 v6 v7
-on:
-  push:
-    branches:
-      - master
+on: [push]
 
 jobs:
   checkfeatures:

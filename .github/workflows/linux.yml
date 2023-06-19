@@ -1,8 +1,6 @@
 name: linux
-on:
-  push:
-    branches:
-      - master
+on: [push]
+
 jobs:
   checkfeatures:
     strategy:

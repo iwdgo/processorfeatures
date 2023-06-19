@@ -1,8 +1,6 @@
 name: amd64 ubuntu
-on:
-  push:
-    branches:
-      - master
+on: [push]
+
 jobs:
   checkfeatures:
     runs-on: ubuntu-latest

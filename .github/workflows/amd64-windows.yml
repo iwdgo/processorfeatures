@@ -1,8 +1,6 @@
 name: amd64 windows
-on:
-  push:
-    branches:
-      - master
+on: [push]
+
 jobs:
   checkfeatures:
     runs-on: windows-latest
