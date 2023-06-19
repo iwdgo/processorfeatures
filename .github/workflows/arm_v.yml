@@ -35,7 +35,7 @@ jobs:
           docker exec -w /tmp xgolang echo $PATH
           docker exec xgolang go version
           docker exec xgolang go env
-          # docker exec xgolang go install github.com/iwdgo/processorfeatures/setprocessor@latest
+          docker exec xgolang go install github.com/iwdgo/processorfeatures/setprocessor@latest
           # Processor features from OS
           docker exec xgolang arch
           docker exec xgolang cat /proc/cpuinfo
