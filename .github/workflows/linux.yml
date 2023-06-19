@@ -32,7 +32,7 @@ jobs:
           docker exec -w /tmp xgolang mkdir -p $(dirname $(go env GOENV))
           docker exec -w /tmp xgolang mkdir -p $(go env GOPATH)/bin
           docker exec -w /tmp xgolang echo $PATH
-          # docker exec xgolang go version
+          docker exec xgolang go version
           # docker exec xgolang go env
           # docker exec xgolang go install github.com/iwdgo/processorfeatures/setprocessor@latest
           # Processor features from OS
