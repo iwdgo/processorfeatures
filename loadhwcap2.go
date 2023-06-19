@@ -47,7 +47,7 @@ const (
 
 	AT_RANDOM = 25
 
-	AT_HWCAP2 = 26
+	AT_HWCAP2 = 26 // 1A
 
 	AT_EXECFN = 31
 
