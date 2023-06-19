@@ -26,7 +26,8 @@ jobs:
           # load docker image with QEMU
           # go install github.com/iwdgo/gotip-build/architecture@latest
           docker run --rm --privileged tonistiigi/binfmt:latest --install 386
-          docker run -d -t --platform 386 -e GO386=sse2 -e GO_TEST_TIMEOUT_SCALE=4 -e GOPROXY=https://proxy.golang.org,direct -e GOSUMDB=sum.golang.org -e GOTOOLCHAIN=auto --name xgolang i386/golang
+          # GO386=sse2 fatal error: mallocgc called without a P or outside bootstrapping
+          docker run -d -t --platform 386 -e GO386=387 -e GO_TEST_TIMEOUT_SCALE=4 -e GOPROXY=https://proxy.golang.org,direct -e GOSUMDB=sum.golang.org -e GOTOOLCHAIN=auto --name xgolang i386/golang
           docker exec -w /tmp xgolang mkdir -p $(go env GOCACHE)
           docker exec -w /tmp xgolang mkdir -p $(go env GOMODCACHE)
           docker exec -w /tmp xgolang mkdir -p $(dirname $(go env GOENV))
