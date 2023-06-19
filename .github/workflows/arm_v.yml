@@ -40,9 +40,10 @@ jobs:
           docker exec xgolang arch
           docker exec xgolang cat /proc/cpuinfo
           # Test module on image
+          docker exec xgolang mkdir -p /tmp/processorfeatures/setprocessor
+          docker cp ./. xgolang:/tmp/processorfeatures
           docker exec -w /tmp/processorfeatures/getauxval xgolang go run main.go
           docker exec -w /tmp/processorfeatures/setprocessor xgolang go run main.go
-          docker cp ./. xgolang:/tmp/processorfeatures
           docker exec -w /tmp/processorfeatures xgolang go test -v ./...
           # Set processor
           docker exec xgolang cp /go/bin/setprocessor /home/runner/go/bin/
