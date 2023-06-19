@@ -35,12 +35,13 @@ jobs:
           docker exec -w /tmp xgolang echo $PATH
           docker exec xgolang go version
           docker exec xgolang go env
-          docker exec xgolang go install github.com/iwdgo/processorfeatures/setprocessor@latest
+          # docker exec xgolang go install github.com/iwdgo/processorfeatures/setprocessor@latest
           # Processor features from OS
           docker exec xgolang arch
           docker exec xgolang cat /proc/cpuinfo
           # Test module on image
-          docker exec xgolang mkdir -p /tmp/processorfeatures/setprocessor
+          docker exec -w /tmp/processorfeatures/getauxval xgolang go run main.go
+          docker exec -w /tmp/processorfeatures/setprocessor xgolang go run main.go
           docker cp ./. xgolang:/tmp/processorfeatures
           docker exec -w /tmp/processorfeatures xgolang go test -v ./...
           # Set processor
