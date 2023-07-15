@@ -34,7 +34,7 @@ func addFile(goarch string, structlines []string) {
 		panic(err)
 	}
 
-	if err := os.WriteFile(fmt.Sprintf("hwcap2flags_%s.go", goarch), b, 0666); err != nil {
+	if err := os.WriteFile(fmt.Sprintf("zhwcap2flags_%s.go", goarch), b, 0666); err != nil {
 		log.Fatalf("can't write output: %v\n", err)
 	}
 

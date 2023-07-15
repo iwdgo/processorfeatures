@@ -44,9 +44,9 @@ Default for Go on amd64 is [v1](https://github.com/golang/go/issues/50589).
 
 ### arm
 
-[ARM Developer handbook]https://developer.arm.com/documentation/ddi0602/2023-03/?lang=en
+[ARM Developer handbook](https://developer.arm.com/documentation/ddi0602/2023-03/?lang=en)
 
 ### Version history
 
-API is evolving.
+API is still evolving.  
 arm machine features are not used for now.
